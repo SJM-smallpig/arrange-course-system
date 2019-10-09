@@ -1,0 +1,226 @@
+<template>
+  <div class="w-main">
+    <div class="tabs">
+      <el-tabs v-model="tagActiveName" @tab-click="handleClick">
+        <el-tab-pane label="高一" name="first">
+          <el-table
+            :data="adminClassData"
+            border
+            class="ac-table"
+            :header-cell-style="{background:'#eef1f6',color:'#606266'}"
+            stripe
+          >
+            <el-table-column fixed prop="class" label="班级名称" width="120" align="center"></el-table-column>
+            <el-table-column prop="allSubject" label="组合科目" width="120" align="center"></el-table-column>
+            <el-table-column prop="goSubject" label="走班科目" width="200" align="center"></el-table-column>
+            <el-table-column prop="classNumber" label="班级人数" width="120" align="center"></el-table-column>
+            <el-table-column prop="ratio" label="男女比例" width="120" align="center"></el-table-column>
+            <el-table-column prop="score" label="成绩" width="120" align="center"></el-table-column>
+            <el-table-column fixed="right" label="操作" width="120" align="center">
+              <template slot-scope="scope">
+                <el-button @click="goClass(scope.row)" type="text" size="small">查看</el-button>
+              </template>
+            </el-table-column>
+          </el-table>
+        </el-tab-pane>
+        <el-tab-pane label="高二" name="second">
+          <el-table
+            :data="adminClassData"
+            border
+            class="ac-table"
+            :header-cell-style="{background:'#eef1f6',color:'#606266'}"
+            stripe
+          >
+            <el-table-column fixed prop="class" label="班级名称" width="120" align="center"></el-table-column>
+            <el-table-column prop="allSubject" label="组合科目" width="120" align="center"></el-table-column>
+            <el-table-column prop="goSubject" label="走班科目" width="200" align="center"></el-table-column>
+            <el-table-column prop="classNumber" label="班级人数" width="120" align="center"></el-table-column>
+            <el-table-column prop="ratio" label="男女比例" width="120" align="center"></el-table-column>
+            <el-table-column prop="score" label="成绩" width="120" align="center"></el-table-column>
+            <el-table-column fixed="right" label="操作" width="120" align="center">
+              <template slot-scope="scope">
+                <el-button @click="goClass(scope.row)" type="text" size="small">查看</el-button>
+              </template>
+            </el-table-column>
+          </el-table>
+        </el-tab-pane>
+        <el-tab-pane label="高三" name="third">
+          <el-table
+            :data="adminClassData"
+            border
+            class="ac-table"
+            :header-cell-style="{background:'#eef1f6',color:'#606266'}"
+            stripe
+          >
+            <el-table-column fixed prop="class" label="班级名称" width="120" align="center"></el-table-column>
+            <el-table-column prop="allSubject" label="组合科目" width="120" align="center"></el-table-column>
+            <el-table-column prop="goSubject" label="走班科目" width="200" align="center"></el-table-column>
+            <el-table-column prop="classNumber" label="班级人数" width="120" align="center"></el-table-column>
+            <el-table-column prop="ratio" label="男女比例" width="120" align="center"></el-table-column>
+            <el-table-column prop="score" label="成绩" width="120" align="center"></el-table-column>
+            <el-table-column fixed="right" label="操作" width="120" align="center">
+              <template slot-scope="scope">
+                <el-button @click="goClass(scope.row)" type="text" size="small">查看</el-button>
+              </template>
+            </el-table-column>
+          </el-table>
+        </el-tab-pane>
+      </el-tabs>
+    </div>
+  </div>
+</template>
+
+<script>
+export default {
+  components: {},
+  props: {},
+  data() {
+    return {
+      tagActiveName: "first",
+      adminClassData: [
+        {
+          id: 1,
+          class: "高一1班",
+          allSubject: "物化政",
+          goSubject: "/",
+          classNumber: "30",
+          ratio: "15/15",
+          score: 292
+        },
+        {
+          id: 2,
+          class: "高一2班",
+          allSubject: "生政史",
+          goSubject: "/",
+          classNumber: "29",
+          ratio: "14/15",
+          score: 292
+        },
+        {
+          id: 3,
+          class: "高一3班",
+          allSubject: "物化史",
+          goSubject: "/",
+          classNumber: "32",
+          ratio: "16/16",
+          score: 292
+        },
+        {
+          id: 4,
+          class: "高一4班",
+          allSubject: "化生政",
+          goSubject: "/",
+          classNumber: "35",
+          ratio: "20/15",
+          score: 292
+        },
+        {
+          id: 5,
+          class: "高一5班",
+          allSubject: "物化X",
+          goSubject: "/",
+          classNumber: "30",
+          ratio: "15/15",
+          score: 292
+        },
+        {
+          id: 6,
+          class: "高一6班",
+          allSubject: "物化X",
+          goSubject: "/",
+          classNumber: "30",
+          ratio: "15/15",
+          score: 292
+        },
+        {
+          id: 7,
+          class: "高一7班",
+          allSubject: "物化X",
+          goSubject: "物理、化学、政治",
+          classNumber: "30",
+          ratio: "15/15",
+          score: 292
+        },
+        {
+          id: 8,
+          class: "高一8班",
+          allSubject: "物化X",
+          goSubject: "生物、化学",
+          classNumber: "30",
+          ratio: "15/15",
+          score: 292
+        }
+      ]
+    };
+  },
+  watch: {},
+  computed: {},
+  methods: {
+    //handleClick：切换tabs
+    handleClick(key, keyPath) {
+       console.log(key, keyPath);
+    },
+
+    //goClass：跳转到班级具体信息页面
+    goClass(row) {
+      
+      let that = this;
+      that.$router.push({
+        path: "@/components/Class", //跳转路径
+        name: "class", //跳转路径的name值，不写跳转后页面取不到参数
+        // 参数
+        query: {
+          row: row, //点击当行数据
+          tagActiveName: this.tagActiveName//跳转当前tab
+        }
+      });
+    }
+  },
+  created() {},
+  mounted() {
+    //判断路由返回tab
+    if (this.$route.params.active) {
+      this.tagActiveName = this.$route.params.active;
+    }
+  }
+};
+</script>
+<style scoped>
+.w-main {
+  position: relative;
+  margin-top: 0;
+  margin-right: 0;
+  margin-left: 0;
+}
+.ac-table {
+  margin: 0 auto;
+  width: 921px;
+  margin-top:30px;
+  margin-bottom:30px;
+}
+.tc-table {
+  width: 601px;
+  margin: 0 auto;
+}
+.tabs {
+  border-bottom: 1px solid #eaecf1;
+}
+.el-dropdown {
+  color: #409eff;
+  margin: 15px 20px;
+  font-size: 18px;
+}
+.el-dropdown-link {
+  cursor: pointer;
+  color: #409eff;
+}
+.el-icon-arrow-down {
+  font-size: 12px;
+}
+.demonstration {
+  display: block;
+  color: #8492a6;
+  font-size: 16px;
+  margin-bottom: 20px;
+}
+</style>
