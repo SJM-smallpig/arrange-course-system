@@ -28,16 +28,16 @@ export default {
       changeLoginStatus(){
           let that =this;
           if(that.loginStatus = '退出'){
-              that.$session.remove('username');
-              that.$session.remove('pasword');
-              that.$router.replace('/login');
+            that.sessionData("clean",'username');
+            that.sessionData("clean",'password');
+            that.$router.replace('/');
           }
       }
   },
   created() {
       let that =this;
-      if(this.$session.get('username')){
-          that.username = this.$session.get('username');
+      if(this.sessionData('get','username')){
+          that.username = this.sessionData('get','username');
           that.loginStatus = '退出'
       }else{
           that.loginStatus = '登录'

@@ -8,16 +8,22 @@
         </el-button>
       </div>
       <div v-for="item in taskNameArray" :key="item.index" class="card-content">
-        <i class="el-icon-edit" @click="setName(item.name)"></i>
-        {{item.name}}
+        <i class="el-icon-edit" @click="setName(item.taskName)"></i>
+        {{item.taskName}}
         <el-button
           type="danger"
           size="mini"
           round
           class="set-bt delete-task"
-          @click="deleteTask(item.name)"
+          @click="deleteTask(item.taskName)"
         >删除</el-button>
-        <el-button type="primary" size="mini" round class="set-bt" @click="toSetRules(item.name)">设置</el-button>
+        <el-button
+          type="primary"
+          size="mini"
+          round
+          class="set-bt"
+          @click="toSetRules(item.taskName)"
+        >设置</el-button>
       </div>
     </el-card>
   </div>
@@ -29,31 +35,63 @@ export default {
   props: {},
   data() {
     return {
-      taskNameArray: [{name:'高一分班'}]
+      taskNameArray: []
     };
   },
   watch: {},
-  computed: {},
+  computed: {
+    taskLists() {
+      return this.$store.state.taskListName;
+    }
+  },
   methods: {
+    //获取数据
+    getData() {
+      let that =this;
+      let taskListName = that.$store.state.taskListName;
+      that.taskNameArray = taskListName;
+    },
     //新建任务
     openAddName() {
-      this.$prompt("请输入任务名称", "新建任务", {
+      let that = this;
+      that.$prompt("请输入任务名称", "新建任务", {
         confirmButtonText: "确定",
         cancelButtonText: "取消",
         inputPattern: /^[a-zA-Z0-9\u4e00-\u9fa5]+$/,
         inputErrorMessage: "任务名称格式不正确，只能包含汉字，数字，字母"
       })
         .then(({ value }) => {
-          if (this.taskNameArray.push({ name: value })) {
-            this.$message({
+          if (that.$store.state.taskListName.length == 0) {
+            let obj = {};
+            obj["taskName"] = value;
+            that.$store.commit("SET_List_NAME", obj);
+            // console.log(this.$store.state.taskListName);
+            that.$message({
               type: "success",
               message: "你的任务名称是: " + value
             });
+          } else {
+            let array = that.$store.state.taskListName.filter(function(i) {
+              return i.taskName == value;
+            });
+         
+            if (array.length!=0) {
+              alert("该任务已存在");
+              that.openAddName();
+            }else{
+              let obj = {};
+              obj["taskName"] = value;
+              that.$store.commit("SET_List_NAME", obj);
+              that.$message({
+                type: "success",
+                message: "你的任务名称是: " + value
+              });
+              
+            }
           }
-          console.log(this.taskNameArray);
         })
         .catch(() => {
-          this.$message({
+          that.$message({
             type: "info",
             message: "取消输入"
           });
@@ -61,25 +99,27 @@ export default {
     },
     //删除任务
     deleteTask(name) {
-      this.$confirm("是否删除" + name + "这一任务", "删除", {
+      let that =this;
+      that.$confirm("是否删除" + name + "这一任务", "删除", {
         confirmButtonText: "确定",
         cancelButtonText: "取消",
         type: "warning"
       })
         .then(() => {
-          for (let i = 0; i < this.taskNameArray.length; i++) {
-            if (this.taskNameArray[i].name == name) {
-              this.taskNameArray.splice(i, 1);
-              this.$message({
+          for (let i = 0; i < that.taskNameArray.length; i++) {
+            if (that.taskNameArray[i].taskName == name) {
+              // this.taskNameArray.splice(i, 1);
+              that.$store.commit("DEL_List_NAME", name);
+              console.log(that.$store.getters.getTaskList);
+              that.$message({
                 type: "success",
                 message: "删除成功!"
               });
-              console.log(this.taskNameArray);
             }
           }
         })
         .catch(() => {
-          this.$message({
+          that.$message({
             type: "info",
             message: "已取消删除"
           });
@@ -87,45 +127,48 @@ export default {
     },
     //重命名任务
     setName(oldName) {
-      this.$prompt("请输入新名称", "重命名", {
+      let that = this;
+      that.$prompt("请输入新名称", "重命名", {
         confirmButtonText: "确定",
         cancelButtonText: "取消",
         inputPattern: /^[a-zA-Z0-9\u4e00-\u9fa5]+$/,
         inputErrorMessage: "任务名称格式不正确，只能包含汉字，数字，字母"
       })
         .then(({ value }) => {
-         for (let i = 0; i < this.taskNameArray.length; i++) {
-            if (this.taskNameArray[i].name == oldName) {
-              this.taskNameArray[i].name=value
-              this.$message({
-                type: "success",
-                message: "重命名成功!"
-              });
-              console.log(this.taskNameArray);
-            }
-          }
+          let names = {};
+          names.oldName = oldName;
+          names.reName = value;
+          that.$store.commit("LIST_RENAME", names);
+          // this.taskNameArray[i].taskName = value;
+          that.$message({
+            type: "success",
+            message: "重命名成功!"
+          });
         })
         .catch(() => {
-          this.$message({
+          that.$message({
             type: "info",
             message: "取消输入"
           });
         });
     },
     //跳转当任务设置页面
-    toSetRules(taskName){
+    toSetRules(taskName) {
       let that = this;
       that.$router.push({
         path: "@/views/SetRules", //跳转路径
         name: "setRules", //跳转路径的name值，不写跳转后页面取不到参数
         // 参数
         query: {
-          taskName:taskName
+          taskName: taskName
         }
       });
     }
   },
-  created() {},
+  created() {
+    let that =this;
+    that.getData();
+  },
   mounted() {}
 };
 </script>

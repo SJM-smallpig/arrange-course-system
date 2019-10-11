@@ -4,9 +4,15 @@
       <div slot="header" class="clearfix">
         <span>任务列表</span>
       </div>
-      <el-collapse v-model="activeNames" @change="handleChange" v-show="isShow">
-        <template v-for="item in formData">
-          <el-collapse-item :title="item.taskName" name="1" :key="item.index">
+      <el-collapse
+        v-model="activeNames"
+        @change="handleChange"
+        v-show="isShow"
+        v-for="item in formData"
+        :key="item.index"
+      >
+        
+          <el-collapse-item :title="item.taskName" :name="item.name">
             <el-form label-position="left" class="demo-table-expand">
               <el-form-item label="年级">
                 <div style="border-bottom:1px solid #bababa;">
@@ -110,7 +116,7 @@
                       class="group-num-table"
                       :header-cell-style="{background:'#eef1f6',color:'#606266'}"
                     >
-                      <el-table-column prop="subject" label="科目" align="center" width="80px"></el-table-column>
+                      <el-table-column prop="subject" label="科目组合" align="center" width="80px"></el-table-column>
                       <el-table-column prop="GeoPol" label="地政" align="center" width="80px"></el-table-column>
                       <el-table-column prop="BioChe" label="生化" align="center" width="80px"></el-table-column>
                       <el-table-column prop="GeoBio" label="地生" align="center" width="80px"></el-table-column>
@@ -283,12 +289,19 @@
                       <el-table-column prop="Biology" label="生物" align="center" width="100px"></el-table-column>
                       <el-table-column prop="Chemistry" label="化学" align="center" width="100px"></el-table-column>
                     </el-table>
-                    <el-button class="next-btn" type="primary" round size="mini" @click="nextTwoPart" v-if="showOneResult">继续下一步</el-button>
+                    <el-button
+                      class="next-btn"
+                      type="primary"
+                      round
+                      size="mini"
+                      @click="nextTwoPart"
+                      v-if="showOneResult"
+                    >继续下一步</el-button>
                   </div>
 
                   <div>
                     <el-table
-                    v-show="isTwoPartData"
+                      v-show="isTwoPartData"
                       v-model="twoPartData"
                       :data="twoPartData"
                       border
@@ -311,17 +324,37 @@
                         ></el-table-column>
                       </el-table-column>
                       <el-table-column label="第二组" align="center">
-                        <el-table-column prop="secondGroup.group" label="组合(历 / 物)" align="center" width="100px"></el-table-column>
-                        <el-table-column prop="secondGroup.rate" label="比例" align="center" width="100px"></el-table-column>
+                        <el-table-column
+                          prop="secondGroup.group"
+                          label="组合(历 / 物)"
+                          align="center"
+                          width="100px"
+                        ></el-table-column>
+                        <el-table-column
+                          prop="secondGroup.rate"
+                          label="比例"
+                          align="center"
+                          width="100px"
+                        ></el-table-column>
                       </el-table-column>
                       <el-table-column label="第三组" align="center">
-                        <el-table-column prop="thirdGroup.group" label="组合(历 / 物)" align="center" width="100px"></el-table-column>
-                        <el-table-column prop="thirdGroup.rate" label="比例" align="center" width="100px"></el-table-column>
+                        <el-table-column
+                          prop="thirdGroup.group"
+                          label="组合(历 / 物)"
+                          align="center"
+                          width="100px"
+                        ></el-table-column>
+                        <el-table-column
+                          prop="thirdGroup.rate"
+                          label="比例"
+                          align="center"
+                          width="100px"
+                        ></el-table-column>
                       </el-table-column>
                     </el-table>
                     <div class="result-sty" v-show="isTwoPartData">第二阶段生成结果如下:</div>
                     <el-table
-                    v-show="isTwoPartData"
+                      v-show="isTwoPartData"
                       v-model="twoResutltData"
                       :data="twoResutltData"
                       border
@@ -338,9 +371,9 @@
               </el-form-item>
             </el-form>
           </el-collapse-item>
-        </template>
       </el-collapse>
       <div v-show="!isShow" class="no-data">没有设置任务</div>
+
     </el-card>
   </div>
 </template>
@@ -352,14 +385,14 @@ export default {
   props: {},
   data() {
     return {
-      active:1,
-      isTwoPartData:false,
+      active: 1,
+      isTwoPartData: false,
       showOneResult: false,
       showBegin: true,
       status: "进行中",
       isShow: false,
       formData: [],
-      activeNames: [],
+      activeNames: ['1'],
       oneResutltData: [
         //第一阶段结果数据
         {
@@ -398,31 +431,32 @@ export default {
           Chemistry: "0.0"
         }
       ],
-      twoResutltData:[//第二阶段结果数据
+      twoResutltData: [
+        //第二阶段结果数据
         {
           group: "第一组",
-          History:'50.0/1',
-          Physics:'50.0/3'
+          History: "50.0/1",
+          Physics: "50.0/3"
         },
         {
-         group: "第二组",
-          History:'40.5/2',
-          Physics:'50.0/3'
+          group: "第二组",
+          History: "40.5/2",
+          Physics: "50.0/3"
         },
         {
-         group: "第三组",
-          History:'37.5/2',
-          Physics:'50.0/4'
+          group: "第三组",
+          History: "37.5/2",
+          Physics: "50.0/4"
         },
         {
-         group: "总计",
-          History:'5.0',
-          Physics:'10.0'
+          group: "总计",
+          History: "5.0",
+          Physics: "10.0"
         },
         {
           group: "差值",
-          History:'0.0',
-          Physics:'0.0'
+          History: "0.0",
+          Physics: "0.0"
         }
       ],
       subGroupData: [
@@ -512,7 +546,8 @@ export default {
           edit: false
         }
       ],
-      twoPartData: [ //第一阶段数据
+      twoPartData: [
+        //第一阶段数据
         {
           firstGroup: {
             group: "地政",
@@ -573,7 +608,11 @@ export default {
     };
   },
   watch: {},
-  computed: {},
+  computed: {
+    taskLists() {
+      return this.$store.state.taskLists;
+    }
+  },
   methods: {
     //遍历组合数据
     ergodicGroup(curCom, curNum, toalName, groupOneName, groupTwoName) {
@@ -669,26 +708,35 @@ export default {
       }
     },
     //第二阶段开始
-    nextTwoPart(){
-      if(this.isTwoPartData == false){
+    nextTwoPart() {
+      if (this.isTwoPartData == false) {
         this.isTwoPartData = !this.isTwoPartData;
         this.active = 2;
       }
     }
-
   },
-  created() {},
+  created() {
+    let that = this;
+  },
   mounted() {
-    //获取跳转带来的参数决定显示任务
-    let params = this.$route.query;
-    console.log(params);
-    if (params.form.taskName != undefined) {
-      this.isShow = true;
-      for (let i in params) {
-        this.formData.push(params[i]);
+    let that = this;
+    let params = that.$route.query; 
+    if(params.form.taskName){
+      let that = this;
+      let lists = that.$store.state.taskLists;
+      that.formData = lists;
+      for (let i in that.formData) {
+        that.formData[i]['name']=(parseInt(i)+1).toString() //给list增加当前折叠面板name
       }
+      that.isShow = true;
+      for(let i=0;i<lists.length;i++){
+        if(params.form.taskName == lists[i].taskName){
+          that.activeNames = lists[i].name;
+        }
+      }
+      
     }
-    console.log(this.formData);
+    
   }
 };
 </script>
@@ -805,16 +853,16 @@ export default {
   color: #e6a23c;
   font-weight: bold;
 }
-.two-part-table{
+.two-part-table {
   width: 601px;
   margin-top: 60px;
-  margin-bottom:10px;
+  margin-bottom: 10px;
 }
-.two-result-table{
-  width:301px;
+.two-result-table {
+  width: 301px;
   margin-top: 10px;
 }
-.next-btn{
-  margin-left:510px;
+.next-btn {
+  margin-left: 510px;
 }
 </style>

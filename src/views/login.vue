@@ -98,18 +98,43 @@ export default {
   methods: {
     //登录跳转
     submitForm(formName) {
+
+
       this.$refs[formName].validate(valid => {
         if (valid) {
-          let username = this.ruleForm.userName;
-          let password = this.ruleForm.password;
-          this.common = true;
-          this.$session.set("username", username);
-          this.$session.set("password", password);
-          this.$router.push('/helloWorld');
-        } else {
-          console.log("error submit!!");
-          return false;
-        }
+            let username = this.ruleForm.userName;
+            let password = this.ruleForm.password;
+            this.common = true;
+            this.sessionData("set", "username", username);
+            this.sessionData("set", "password", password);
+            this.$router.push("/helloWorld");
+          } else {
+            console.log("error submit!!");
+            return false;
+          }
+        //   this.$axios
+        //     .post("/login", {
+        //       user: this.ruleForm.userName,
+        //       pass: this.ruleForm.password
+        //     })
+        //     .then(response => {
+        //       if (response.status === 200) {
+        //         this.$store.commit("SET_TOKEN", response.data.token);
+        //         this.$store.commit("GET_USER", response.data.user);
+        //         this.$message({
+        //           message: "登陆成功",
+        //           type: "success"
+        //         });
+        //         this.$router.push({ name: "/" });
+        //       }
+        //     })
+        //     .catch(function(error) {
+        //       console.log(error);
+        //     });
+        // } else {
+        //   console.log("error submit!!");
+        //   return false;
+        // }
       });
     },
     //重新设置密码
@@ -136,19 +161,6 @@ export default {
           return false;
         }
       });
-    },
-    //退出当前账号
-    removeUserInfo() {
-      if (this.username) {
-        let name = this.username;
-        this.$session.remove(name);
-        if (confirm("是否退出当前账号？")) {
-          this.$router.go(-1);
-          this.loginStatus = "登录";
-        } else {
-        }
-      } else {
-      }
     }
   },
   created() {},

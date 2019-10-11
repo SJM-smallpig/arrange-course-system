@@ -210,36 +210,25 @@ export default {
     };
   },
   watch: {},
-  computed: {},
+  computed: {
+    taskLists () {
+      return this.$store.state.taskLists
+    }
+  },
   methods: {
     //求和
-    getSum() {
-      let tbody = $("tbody");
-      let sum = 0;
-      //计算前两个tbody的数据求和
-      for (let i = 0; i < 2; i++) {
-        let cellLength = tbody.eq(i).find(".cell").length;
-        for (let j = 1; j < cellLength - 1; j++) {
-          sum += parseInt(
-            tbody
-              .eq(i)
-              .find(".cell")
-              .eq(j)
-              .text()
-          );
-        }
-        tbody
-          .eq(i)
-          .find(".cell")
-          .eq(cellLength - 1)
-          .text(sum);
-        if (i == 0) {
-          this.form.studentData[0].sum = sum;
-        } else {
-          this.form.teachData[0].sum = sum;
-        }
-        sum = 0;
+    getSum(obj) {
+      var arr = [];
+      for (let i in obj) {
+        arr.push(parseInt(obj[i]));
       }
+      arr.pop(arr.length-1);
+      arr.shift(1);
+      let sum = arr.reduce(function(prev, cur) {
+        return prev + cur
+      }, 0);
+      obj.sum = sum;
+      let tbody = $("tbody");
       //移除timeTable的删除操作
       let timeTr = tbody.eq(2).find("tr");
       for (let j = 0; j < timeTr.length - 1; j++) {
@@ -256,12 +245,11 @@ export default {
     //删除timeTable的某行
     deleteRow(index, rows) {
       rows.splice(index, 1);
-      let trLength = $(".time-table").find('tr').length-2;
-     $(".time-table tr:eq("+trLength+") .cell:eq(2)").css(
-          "visibility",
-          "visible"
-        );;
-    
+      let trLength = $(".time-table").find("tr").length - 2;
+      $(".time-table tr:eq(" + trLength + ") .cell:eq(2)").css(
+        "visibility",
+        "visible"
+      );
     },
     //timeTable每行增加时间
     addTime(time, num) {
@@ -308,8 +296,19 @@ export default {
     },
     //提交表单
     submitForm(formName, formData) {
-      console.log(formData);
+      let taskLists = this.$store.state.taskLists;
       let that = this;
+      var newLists = taskLists.filter(function(i){
+        return i.taskName == formData.taskName
+      })
+      if(newLists.length == 0){
+        that.$store.commit('SET_List',formData);
+      }else{
+        that.$store.commit('UPDATE_List',formData);
+      }
+      
+      // console.log(formData);
+      
       that.$refs[formName].validate(valid => {
         if (valid) {
           that.$router.push({
@@ -317,7 +316,7 @@ export default {
             name: "rulesLists", //跳转路径的name值，不写跳转后页面取不到参数
             // 参数
             query: {
-              form: this.form
+              form: that.form
             }
           });
         } else {
@@ -327,15 +326,34 @@ export default {
       });
     }
   },
-  created() {},
+  created() {
+    // console.log(this.$store.state.taskLists)
+  },
   mounted() {
     var that = this;
     let params = that.$route.query;
-    that.form.taskName = params.taskName; //获取当前任务名
-    this.getSum();
+    
+    //获取当前任务名
+    let studentData = that.form.studentData[0];
+    let teachData = that.form.teachData[0];
+    // console.log(studentData)
+    that.getSum(studentData);
+    that.getSum(teachData);
+    let taskList = that.$store.state.taskLists;
+    //若存在数据则先加载
+    let currentList = taskList.filter(function(i){
+      return i.taskName == params.taskName
+    })
+    if(currentList.length==0){
+      // that.form = {} 
+    }else{
+      that.form = currentList[0];
+    }
+    that.form.taskName = params.taskName; 
+   
   },
   updated() {
-    this.getSum(); //求和
+    // this.getSum(); //求和
   }
 };
 </script>
