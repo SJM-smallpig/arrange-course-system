@@ -69,7 +69,7 @@
               <el-form-item label="班级人数范围">
                 <span>{{item.miniNums}} -- {{item.maxNums}}</span>
               </el-form-item>
-              <el-form-item label="课程时间设置">
+              <!--<el-form-item label="课程时间设置">
                 <el-table
                   v-show="item.timeTable"
                   v-model="item.timeTable"
@@ -83,7 +83,7 @@
                   <el-table-column prop label="课程时间" align="center" width="80px">~~</el-table-column>
                   <el-table-column prop="time.endTime" label align="center" width="70px"></el-table-column>
                 </el-table>
-              </el-form-item>
+              </el-form-item>-->
               <el-form-item label="任务状态">
                 <span class="status">分班第一阶段:</span>
                 <el-button

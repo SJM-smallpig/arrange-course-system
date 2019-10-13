@@ -159,6 +159,8 @@ export default {
 
 .el-col {
   width: 250px;
+  position: fixed;
+  z-index:98;
 }
 
 .el-menu-item-group__title {

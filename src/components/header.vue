@@ -50,12 +50,13 @@ export default {
 </script>
 <style scoped>
 .head {
-  position: absolute;
+  position: fixed;
   top: 0;
   left: 0;
   right: 0;
   width: 100%;
   height: 70px;
+  z-index: 98;
   background: rgb(84, 92, 100);
 }
 .head-content {

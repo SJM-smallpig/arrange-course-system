@@ -100,7 +100,7 @@
             class="input"
           ></el-input>
         </el-form-item>
-        <el-form-item label="课程时间设置">
+        <!--<el-form-item label="课程时间设置">
           <el-table
             class="time-table"
             :data="form.timeTable"
@@ -148,7 +148,7 @@
             </el-table-column>
           </el-table>
           <span class="add-time-row" @click="addTimeRow" v-show="addShow">+</span>
-        </el-form-item>
+        </el-form-item>-->
         <el-form-item>
           <el-button class="save">保存</el-button>
           <el-button type="primary" @click="submitForm('form',form)" class="sub">开始分班</el-button>
@@ -312,8 +312,8 @@ export default {
       that.$refs[formName].validate(valid => {
         if (valid) {
           that.$router.push({
-            path: "@/views/RulesLists", //跳转路径
-            name: "rulesLists", //跳转路径的name值，不写跳转后页面取不到参数
+            path: "@/components/rulesStage/RuleOneStage", //跳转路径
+            name: "ruleOneStage", //跳转路径的name值，不写跳转后页面取不到参数
             // 参数
             query: {
               form: that.form
