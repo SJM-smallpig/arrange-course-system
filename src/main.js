@@ -15,7 +15,7 @@ Vue.use(ElementUI);
 Vue.use(Print);
 Vue.prototype.localData = localData;
 Vue.prototype.sessionData=sessionData;
-Vue.prototype.$ajax = axios
+Vue.prototype.$ajax  = axios;
 
 
 //判断是进入登录页面还是主页面

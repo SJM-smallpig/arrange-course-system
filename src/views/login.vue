@@ -98,12 +98,14 @@ export default {
   methods: {
     //登录跳转
     submitForm(formName) {
-
-
       this.$refs[formName].validate(valid => {
         if (valid) {
-            let username = this.ruleForm.userName;
-            let password = this.ruleForm.password;
+          let username = this.ruleForm.userName;
+          let password = this.ruleForm.password;
+          let obj = {};
+          obj["username"] = username;
+          obj["password"] = password;
+          let queryArray = JSON.stringify(obj);
             this.common = true;
             this.sessionData("set", "username", username);
             this.sessionData("set", "password", password);
@@ -112,20 +114,31 @@ export default {
             console.log("error submit!!");
             return false;
           }
-        //   this.$axios
-        //     .post("/login", {
-        //       user: this.ruleForm.userName,
-        //       pass: this.ruleForm.password
-        //     })
-        //     .then(response => {
-        //       if (response.status === 200) {
-        //         this.$store.commit("SET_TOKEN", response.data.token);
-        //         this.$store.commit("GET_USER", response.data.user);
-        //         this.$message({
-        //           message: "登陆成功",
-        //           type: "success"
-        //         });
-        //         this.$router.push({ name: "/" });
+          // this.$axios.post("http://lede.dalaomai.cn:5050/goclass/login", {
+          //     user: this.ruleForm.userName,
+          //     pass: this.ruleForm.password
+          //   })
+
+          //   .then(response => {
+          // this.$ajax({
+          //   method: "post",
+          //   headers: {
+          //     "Content-Type": "application/json;charset=utf-8"
+          //   },
+          //   // headers: { "Access-Control-Allow-Origin": "*" },
+          //   url: "http://lede.dalaomai.cn:5050/goclass/login",
+          //   data: queryArray
+          // })
+          //   .then(function(res) {
+              // if (response.status === 200) {
+              //   console.log(res);
+                // this.$store.commit("SET_TOKEN", response.data.token);
+                // this.$store.commit("GET_USER", response.data.user);
+                // this.$message({
+                //   message: "登陆成功",
+                //   type: "success"
+                // });
+                // this.$router.push({ name: "/" });
         //       }
         //     })
         //     .catch(function(error) {

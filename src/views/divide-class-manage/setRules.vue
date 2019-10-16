@@ -19,7 +19,7 @@
             <el-radio label="教学班"></el-radio>
           </el-radio-group>
         </el-form-item>
-        <el-form-item label="学生选科人数">
+        <el-form-item label="学生选科组合人数">
           <el-table
             v-model="form.studentData"
             :data="form.studentData"
@@ -29,16 +29,20 @@
             id="st-table"
             :header-cell-style="{background:'#eef1f6',color:'#606266'}"
           >
-            <el-table-column prop="subject" label="科目" align="center" width="80px"></el-table-column>
-            <el-table-column prop="Chinese" label="语文" align="center" width="80px"></el-table-column>
-            <el-table-column prop="Math" label="数学" align="center" width="80px"></el-table-column>
-            <el-table-column prop="English" label="英语" align="center" width="80px"></el-table-column>
-            <el-table-column prop="Physics" label="物理" align="center" width="80px"></el-table-column>
-            <el-table-column prop="Chemistry" label="化学" align="center" width="80px"></el-table-column>
-            <el-table-column prop="Biology" label="生物" align="center" width="80px"></el-table-column>
-            <el-table-column prop="Geography" label="地理" align="center" width="80px"></el-table-column>
-            <el-table-column prop="History" label="历史" align="center" width="80px"></el-table-column>
-            <el-table-column prop="sum" label="总计" align="center" width="80px"></el-table-column>
+            <el-table-column prop="subject" label="科目" align="center" width="60px"></el-table-column>
+            <el-table-column prop="hgp" label="历地政" align="center" width="60px"></el-table-column>
+            <el-table-column prop="hgb" label="历地生" align="center" width="60px"></el-table-column>
+            <el-table-column prop="hgs" label="历地化" align="center" width="60px"></el-table-column>
+            <el-table-column prop="hpb" label="历政生" align="center" width="60px"></el-table-column>
+            <el-table-column prop="hps" label="历政化" align="center" width="60px"></el-table-column>
+            <el-table-column prop="hbs" label="历生化" align="center" width="60px"></el-table-column>
+            <el-table-column prop="pgp" label="物地政" align="center" width="60px"></el-table-column>
+            <el-table-column prop="pgb" label="物地生" align="center" width="60px"></el-table-column>
+            <el-table-column prop="pgs" label="物地化" align="center" width="60px"></el-table-column>
+            <el-table-column prop="ppb" label="物政生" align="center" width="60px"></el-table-column>
+            <el-table-column prop="pps" label="物政化" align="center" width="60px"></el-table-column>
+            <el-table-column prop="pbs" label="物生化" align="center" width="60px"></el-table-column>
+            <el-table-column prop="sum" label="总计" align="center" width="60px"></el-table-column>
           </el-table>
         </el-form-item>
 
@@ -48,7 +52,7 @@
             :data="form.teachData"
             border
             size="mini"
-            class="st-table"
+            class="t-table"
             id="st-table"
             :header-cell-style="{background:'#eef1f6',color:'#606266'}"
           >
@@ -61,6 +65,7 @@
             <el-table-column prop="Biology" label="生物" align="center" width="80px"></el-table-column>
             <el-table-column prop="Geography" label="地理" align="center" width="80px"></el-table-column>
             <el-table-column prop="History" label="历史" align="center" width="80px"></el-table-column>
+            <el-table-column prop="Politics" label="政治" align="center" width="80px"></el-table-column>
             <el-table-column prop="sum" label="总计" align="center" width="80px"></el-table-column>
           </el-table>
         </el-form-item>
@@ -174,20 +179,6 @@ export default {
           {
             subject: "人数",
             Chinese: "173",
-            Math: "500",
-            English: "55",
-            Physics: "752",
-            Chemistry: "130",
-            Biology: "50",
-            Geography: "200",
-            History: "150",
-            sum: ""
-          }
-        ],
-        studentData: [
-          {
-            subject: "人数",
-            Chinese: "173",
             Math: "260",
             English: "55",
             Physics: "52",
@@ -195,24 +186,43 @@ export default {
             Biology: "50",
             Geography: "00",
             History: "10",
+            Politics: "20",
+            sum: ""
+          }
+        ],
+        studentData: [
+          {
+            subject: "人数",
+            hgp: "173",
+            hgb: "500",
+            hgs: "500",
+            hpb: "55",
+            hps: "752",
+            hbs: "130",
+            pgp: "457",
+            pgb: "50",
+            pgs: "200",
+            ppb: "150",
+            pps: "20",
+            pbs: "585",
             sum: ""
           }
         ],
         miniNums: "",
         maxNums: "",
-        timeTable: [
-          {
-            section: "第1节课",
-            time: { startTime: "07:00", endTime: "07:40" }
-          }
-        ]
+        // timeTable: [
+        //   {
+        //     section: "第1节课",
+        //     time: { startTime: "07:00", endTime: "07:40" }
+        //   }
+        // ]
       }
     };
   },
   watch: {},
   computed: {
-    taskLists () {
-      return this.$store.state.taskLists
+    taskLists() {
+      return this.$store.state.taskLists;
     }
   },
   methods: {
@@ -222,10 +232,10 @@ export default {
       for (let i in obj) {
         arr.push(parseInt(obj[i]));
       }
-      arr.pop(arr.length-1);
+      arr.pop(arr.length - 1);
       arr.shift(1);
       let sum = arr.reduce(function(prev, cur) {
-        return prev + cur
+        return prev + cur;
       }, 0);
       obj.sum = sum;
       let tbody = $("tbody");
@@ -298,17 +308,17 @@ export default {
     submitForm(formName, formData) {
       let taskLists = this.$store.state.taskLists;
       let that = this;
-      var newLists = taskLists.filter(function(i){
-        return i.taskName == formData.taskName
-      })
-      if(newLists.length == 0){
-        that.$store.commit('SET_List',formData);
-      }else{
-        that.$store.commit('UPDATE_List',formData);
+      var newLists = taskLists.filter(function(i) {
+        return i.taskName == formData.taskName;
+      });
+      if (newLists.length == 0) {
+        that.$store.commit("SET_List", formData);
+      } else {
+        that.$store.commit("UPDATE_List", formData);
       }
-      
-      // console.log(formData);
-      
+
+      // console.log(JSON.stringify(formData));
+
       that.$refs[formName].validate(valid => {
         if (valid) {
           that.$router.push({
@@ -332,7 +342,7 @@ export default {
   mounted() {
     var that = this;
     let params = that.$route.query;
-    
+
     //获取当前任务名
     let studentData = that.form.studentData[0];
     let teachData = that.form.teachData[0];
@@ -341,16 +351,15 @@ export default {
     that.getSum(teachData);
     let taskList = that.$store.state.taskLists;
     //若存在数据则先加载
-    let currentList = taskList.filter(function(i){
-      return i.taskName == params.taskName
-    })
-    if(currentList.length==0){
-      // that.form = {} 
-    }else{
+    let currentList = taskList.filter(function(i) {
+      return i.taskName == params.taskName;
+    });
+    if (currentList.length == 0) {
+      // that.form = {}
+    } else {
       that.form = currentList[0];
     }
-    that.form.taskName = params.taskName; 
-   
+    that.form.taskName = params.taskName;
   },
   updated() {
     // this.getSum(); //求和
@@ -360,15 +369,15 @@ export default {
 <style scoped>
 .s-main {
   position: relative;
+  margin-top: 30px;
   margin-right: 0;
-  margin-left: 0;
+  margin-left: 20px;
   height: 1200px;
 }
 .back-head {
   margin-bottom: 10px;
   color: #a8a6a6;
   margin-top: 30px;
-  margin-left: 30px;
 }
 .s-form {
   margin: 0 auto;
@@ -390,8 +399,11 @@ export default {
   font-size: 14px;
   color: #409eff;
 }
+.t-table {
+  width: 881px;
+}
 .st-table {
-  width: 801px;
+  width: 841px;
 }
 .time-table {
   position: relative;
@@ -411,5 +423,6 @@ export default {
 }
 .td-dispaly {
   display: none;
+  
 }
 </style>

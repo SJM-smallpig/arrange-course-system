@@ -67,7 +67,7 @@
           <el-button type="primary" round size="mini" @click="oneStageBegin" v-show="showBegin">开始</el-button>
           <div v-show="!showBegin" class="showing">
             <span class="status">{{status}}</span>
-            <i class="el-icon-refresh-right status"></i>
+            <i class="el-icon-refresh-right status el-making"></i>
           </div>
         </el-form-item>
         <el-form-item label>
@@ -110,14 +110,14 @@
             <el-table
               :data="firstGroup"
               v-model="firstGroup"
+              size="mini"
               border
               stripe
               class="group-table"
-              size="mini"
             >
               <el-table-column label="第一组" align="center">
-                <el-table-column prop="comColumn" label="科目组合" width="80" align="center"></el-table-column>
-                <el-table-column prop="numColumn" label="人数" width="80" align="center">
+                <el-table-column prop="comColumn" label="科目组合" width="100px" align="center"></el-table-column>
+                <el-table-column prop="numColumn" label="人数" width="100px" align="center">
                   <template slot-scope="scope">
                     <el-input
                       v-if="scope.row.edit"
@@ -128,7 +128,7 @@
                     <span v-else>{{scope.row.numColumn}}</span>
                   </template>
                 </el-table-column>
-                <el-table-column label="操作" width="80" align="center" prop="firstGroup">
+                <el-table-column label="操作" width="100" align="center" prop="firstGroup">
                   <template slot-scope="scope">
                     <div v-show="!showHook">
                       <div v-if="!scope.row.edit">
@@ -164,8 +164,8 @@
               size="mini"
             >
               <el-table-column label="第二组" align="center">
-                <el-table-column prop="comColumn" label="科目组合" width="80" align="center"></el-table-column>
-                <el-table-column prop="numColumn" label="人数" width="80" align="center">
+                <el-table-column prop="comColumn" label="科目组合" width="100" align="center"></el-table-column>
+                <el-table-column prop="numColumn" label="人数" width="100" align="center">
                   <template slot-scope="scope">
                     <el-input
                       v-if="scope.row.edit"
@@ -176,7 +176,7 @@
                     <span v-else>{{scope.row.numColumn}}</span>
                   </template>
                 </el-table-column>
-                <el-table-column label="操作" width="80" align="center" prop="secondGroup">
+                <el-table-column label="操作" width="100" align="center" prop="secondGroup">
                   <template slot-scope="scope">
                     <div v-show="!showHook">
                       <div v-if="!scope.row.edit">
@@ -212,8 +212,8 @@
               size="mini"
             >
               <el-table-column label="第三组" align="center">
-                <el-table-column prop="comColumn" label="科目组合" width="80" align="center"></el-table-column>
-                <el-table-column prop="numColumn" label="人数" width="80" align="center">
+                <el-table-column prop="comColumn" label="科目组合" width="100" align="center"></el-table-column>
+                <el-table-column prop="numColumn" label="人数" width="100" align="center">
                   <template slot-scope="scope">
                     <el-input
                       v-if="scope.row.edit"
@@ -224,7 +224,7 @@
                     <span v-else>{{scope.row.numColumn}}</span>
                   </template>
                 </el-table-column>
-                <el-table-column label="操作" width="80" align="center" prop="thirtGroup">
+                <el-table-column label="操作" width="100" align="center" prop="thirtGroup">
                   <template slot-scope="scope">
                     <div v-show="!showHook">
                       <div v-if="!scope.row.edit">
@@ -251,7 +251,7 @@
               </el-table-column>
             </el-table>
             <div class="first-word">
-              第一阶段不同科目组合人数已完成，若需修改
+              第一阶段不同科目组合人数已完成，请参考评分若需修改
               <span>请手动调整</span>,若不需修改或修改好请点击
               <el-button
                 class="modify-btn"
@@ -266,6 +266,16 @@
         <el-button type="warning" @click="toRuleTwoStage" class="next-btn" size="small">下一步</el-button>
       </el-form>
     </template>
+    <!--回到顶部-->
+    <template>
+      <el-backtop class=".page-component__scroll .el-scrollbar__wrap" :bottom="100">
+        <div class="up">
+          <i class="el-icon-caret-top"></i>
+        </div>
+      </el-backtop>
+    </template>
+  </div>
+</template>
   </div>
 </template>
 
@@ -319,7 +329,7 @@ export default {
           Chemistry: "0.0"
         }
       ],
-      
+
       subGroupData: [
         //第一阶段每个组合总人数
         {
@@ -573,7 +583,7 @@ export default {
     //下一步操作
     toRuleTwoStage() {
       let that = this;
-      if (that.isModify == "确定") {
+      if (that.isModify == "修改") {
         that.$router.push({
           path: "@/components/rulesStage/RuleTwoStage", //跳转路径
           name: "ruleTwoStage", //跳转路径的name值，不写跳转后页面取不到参数
@@ -604,9 +614,9 @@ export default {
 <style scoped>
 .r-main {
   position: relative;
-  margin-top: 0;
+  margin-top: 30px;
   margin-right: 0;
-  margin-left: 0;
+  margin-left: 10px;
 }
 .demo-table-expand {
   font-size: 0;
@@ -630,7 +640,7 @@ export default {
 }
 .status {
   color: #409eff;
-  margin-right: 10px;
+  margin-right: 5px;
 }
 .showing {
   display: inline;
@@ -647,7 +657,7 @@ export default {
   font-weight: bold;
 }
 .group-table {
-  width: 241px;
+  width: 301px;
   display: inline-block;
   margin-top: 10px;
   margin-right: 18px;
@@ -681,5 +691,28 @@ export default {
 .next-btn {
   display: inline-block;
   margin: 40px 500px;
+}
+@keyframes roate {
+  0% {
+    transform: rotateZ(0);
+  }
+  100% {
+    transform: rotateZ(360deg);
+  }
+}
+.el-making {
+  font-size: 25px;
+  position: absolute;
+  top: 8px;
+  animation: roate 1s ease 1s infinite backwards;
+}
+.up {
+  height: 100%;
+  width: 100%;
+  background-color: #f2f5f6;
+  box-shadow: 0 0 6px rgba(0, 0, 0, 0.12);
+  text-align: center;
+  line-height: 40px;
+  color: #1989fa;
 }
 </style>

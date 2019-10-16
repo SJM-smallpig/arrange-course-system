@@ -743,7 +743,7 @@ export default {
 <style scoped>
 .r-main {
   position: relative;
-  margin-top: 0;
+  margin-top: 30px;
   margin-right: 0;
   margin-left: 0;
 }

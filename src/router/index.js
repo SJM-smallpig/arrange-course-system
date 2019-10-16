@@ -175,6 +175,28 @@ const router = new Router({
         keepAlive: true,
         requiresAuth: true
       }
+    },
+    {
+      path: '/ruleThreeStage',
+      name: 'ruleThreeStage',
+      component: () => import('@/components/rulesStage/RuleThreeStage'),
+      meta: {
+        title: '规则设置第三阶段',
+        type: '',// 不需要鉴权
+        keepAlive: true,
+        requiresAuth: true
+      }
+    },
+    {
+      path: '/ruleFourthStage',
+      name: 'ruleFourthStage',
+      component: () => import('@/components/rulesStage/RuleFourthStage'),
+      meta: {
+        title: '规则设置第四阶段',
+        type: '',// 不需要鉴权
+        keepAlive: true,
+        requiresAuth: true
+      }
     }
   ]
 })

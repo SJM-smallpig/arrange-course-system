@@ -8,7 +8,7 @@
         </keep-alive>
       </el-header>
     <el-container>
-      <el-aside width="250px">
+      <el-aside width="220px">
         <!-- 侧边栏 -->
         <keep-alive>
           <left></left>

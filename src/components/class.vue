@@ -366,7 +366,7 @@ export default {
 <style scoped>
 .divide {
   position: relative;
-  margin-top: 0;
+  margin-top: 30px;
   border: 20px solid #f5f5f5;
   margin-right: 0;
   margin-left: 250px;
