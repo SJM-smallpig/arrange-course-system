@@ -15,7 +15,8 @@ Vue.use(ElementUI);
 Vue.use(Print);
 Vue.prototype.localData = localData;
 Vue.prototype.sessionData=sessionData;
-Vue.prototype.$ajax  = axios;
+Vue.prototype.$axios = axios;
+axios.defaults.headers.post["Content-type"] = "application/json"
 
 
 //判断是进入登录页面还是主页面

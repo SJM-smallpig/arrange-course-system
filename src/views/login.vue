@@ -106,32 +106,36 @@ export default {
           obj["username"] = username;
           obj["password"] = password;
           let queryArray = JSON.stringify(obj);
-            this.common = true;
-            this.sessionData("set", "username", username);
-            this.sessionData("set", "password", password);
-            this.$router.push("/helloWorld");
-          } else {
-            console.log("error submit!!");
-            return false;
-          }
-          // this.$axios.post("http://lede.dalaomai.cn:5050/goclass/login", {
-          //     user: this.ruleForm.userName,
-          //     pass: this.ruleForm.password
-          //   })
+          this.common = true;
+          this.sessionData("set", "username", username);
+          this.sessionData("set", "password", password);
+          // this.$router.push("/helloWorld");
+          // } else {
+          //   console.log("error submit!!");
+          //   return false;
+          // }
+          this.$axios({
+             method: "post",
+              headers: {
+                "Content-Type": "application/json;charset=utf-8"
+              },
+              url: "http://lede.dalaomai.cn:5050/goclass/login",
+              data: queryArray
+            })
 
-          //   .then(response => {
-          // this.$ajax({
-          //   method: "post",
-          //   headers: {
-          //     "Content-Type": "application/json;charset=utf-8"
-          //   },
-          //   // headers: { "Access-Control-Allow-Origin": "*" },
-          //   url: "http://lede.dalaomai.cn:5050/goclass/login",
-          //   data: queryArray
-          // })
-          //   .then(function(res) {
-              // if (response.status === 200) {
-              //   console.log(res);
+            //   .then(response => {
+            // this.$ajax({
+            //   method: "post",
+            //   headers: {
+            //     "Content-Type": "application/json;charset=utf-8"
+            //   },
+            //   // headers: { "Access-Control-Allow-Origin": "*" },
+            //   url: "http://lede.dalaomai.cn:5050/goclass/login",
+            //   data: queryArray
+            // })
+            .then(function(res) {
+              if (response.status === 200) {
+                // console.log(res);
                 // this.$store.commit("SET_TOKEN", response.data.token);
                 // this.$store.commit("GET_USER", response.data.user);
                 // this.$message({
@@ -139,15 +143,15 @@ export default {
                 //   type: "success"
                 // });
                 // this.$router.push({ name: "/" });
-        //       }
-        //     })
-        //     .catch(function(error) {
-        //       console.log(error);
-        //     });
-        // } else {
-        //   console.log("error submit!!");
-        //   return false;
-        // }
+              }
+            })
+            .catch(function(error) {
+              console.log(error);
+            });
+        } else {
+          console.log("error submit!!");
+          return false;
+        }
       });
     },
     //重新设置密码

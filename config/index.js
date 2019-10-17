@@ -11,6 +11,13 @@ module.exports = {
     assetsSubDirectory: 'static',
     assetsPublicPath: '/',
     proxyTable: {
+      // '/api':{
+      //   target:'http://lede.dalaomai.cn:5050',
+      //   changeOrigin:true,
+      //   pathRewrite:{
+      //     '^/api':''
+      //   }
+      // }
     },
 
     // Various Dev Server settings

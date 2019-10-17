@@ -47,19 +47,20 @@ export default {
   methods: {
     //获取数据
     getData() {
-      let that =this;
+      let that = this;
       let taskListName = that.$store.state.taskListName;
       that.taskNameArray = taskListName;
     },
     //新建任务
     openAddName() {
       let that = this;
-      that.$prompt("请输入任务名称", "新建任务", {
-        confirmButtonText: "确定",
-        cancelButtonText: "取消",
-        inputPattern: /^[a-zA-Z0-9\u4e00-\u9fa5]+$/,
-        inputErrorMessage: "任务名称格式不正确，只能包含汉字，数字，字母"
-      })
+      that
+        .$prompt("请输入任务名称", "新建任务", {
+          confirmButtonText: "确定",
+          cancelButtonText: "取消",
+          inputPattern: /^[a-zA-Z0-9\u4e00-\u9fa5]+$/,
+          inputErrorMessage: "任务名称格式不正确，只能包含汉字，数字，字母"
+        })
         .then(({ value }) => {
           if (that.$store.state.taskListName.length == 0) {
             let obj = {};
@@ -74,11 +75,11 @@ export default {
             let array = that.$store.state.taskListName.filter(function(i) {
               return i.taskName == value;
             });
-         
-            if (array.length!=0) {
+
+            if (array.length != 0) {
               alert("该任务已存在");
               that.openAddName();
-            }else{
+            } else {
               let obj = {};
               obj["taskName"] = value;
               that.$store.commit("SET_List_NAME", obj);
@@ -86,7 +87,6 @@ export default {
                 type: "success",
                 message: "你的任务名称是: " + value
               });
-              
             }
           }
         })
@@ -99,12 +99,13 @@ export default {
     },
     //删除任务
     deleteTask(name) {
-      let that =this;
-      that.$confirm("是否删除" + name + "这一任务", "删除", {
-        confirmButtonText: "确定",
-        cancelButtonText: "取消",
-        type: "warning"
-      })
+      let that = this;
+      that
+        .$confirm("是否删除" + name + "这一任务", "删除", {
+          confirmButtonText: "确定",
+          cancelButtonText: "取消",
+          type: "warning"
+        })
         .then(() => {
           for (let i = 0; i < that.taskNameArray.length; i++) {
             if (that.taskNameArray[i].taskName == name) {
@@ -128,12 +129,13 @@ export default {
     //重命名任务
     setName(oldName) {
       let that = this;
-      that.$prompt("请输入新名称", "重命名", {
-        confirmButtonText: "确定",
-        cancelButtonText: "取消",
-        inputPattern: /^[a-zA-Z0-9\u4e00-\u9fa5]+$/,
-        inputErrorMessage: "任务名称格式不正确，只能包含汉字，数字，字母"
-      })
+      that
+        .$prompt("请输入新名称", "重命名", {
+          confirmButtonText: "确定",
+          cancelButtonText: "取消",
+          inputPattern: /^[a-zA-Z0-9\u4e00-\u9fa5]+$/,
+          inputErrorMessage: "任务名称格式不正确，只能包含汉字，数字，字母"
+        })
         .then(({ value }) => {
           let names = {};
           names.oldName = oldName;
@@ -163,11 +165,24 @@ export default {
           taskName: taskName
         }
       });
+    },
+    //获取现有任务
+    getTaskListData() {
+      this.$axios
+        .get("http://lede.dalaomai.cn:5050/api/admin/class/grouping/taskstatus", {
+        })
+        .then(res => {
+          console.log("数据是:", res);
+        })
+        .catch(e => {
+          console.log("获取数据失败");
+        });
     }
   },
   created() {
-    let that =this;
+    let that = this;
     that.getData();
+    that.getTaskListData();
   },
   mounted() {}
 };
