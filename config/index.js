@@ -11,13 +11,14 @@ module.exports = {
     assetsSubDirectory: 'static',
     assetsPublicPath: '/',
     proxyTable: {
-      // '/api':{
-      //   target:'http://lede.dalaomai.cn:5050',
-      //   changeOrigin:true,
-      //   pathRewrite:{
-      //     '^/api':''
-      //   }
-      // }
+      '/api':{
+        target:'http://lede.dalaomai.cn:5050/',
+        changeOrigin: true,//是否跨域
+         secure: true, // 允许https请求
+         pathRewrite: {
+          '^/api': ''//这里理解成用‘/api’代替target里面的地址
+        }
+      }
     },
 
     // Various Dev Server settings

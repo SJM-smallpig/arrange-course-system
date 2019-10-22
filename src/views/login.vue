@@ -98,51 +98,56 @@ export default {
   methods: {
     //登录跳转
     submitForm(formName) {
-      this.$refs[formName].validate(valid => {
+      let that = this;
+      that.$refs[formName].validate(valid => {
         if (valid) {
-          let username = this.ruleForm.userName;
-          let password = this.ruleForm.password;
+          let username = that.ruleForm.userName;
+          let password = that.ruleForm.password;
           let obj = {};
           obj["username"] = username;
           obj["password"] = password;
           let queryArray = JSON.stringify(obj);
-          this.common = true;
-          this.sessionData("set", "username", username);
-          this.sessionData("set", "password", password);
+          console.log(queryArray);
+          that.common = true;
+          // that.sessionData("set", "username", username);
+          // that.sessionData("set", "password", password);
           // this.$router.push("/helloWorld");
           // } else {
           //   console.log("error submit!!");
           //   return false;
           // }
-          this.$axios({
-             method: "post",
+          that.$axios({
+            url: "/api/goclass/login",
+              method: "post",
               headers: {
                 "Content-Type": "application/json;charset=utf-8"
               },
-              url: "http://lede.dalaomai.cn:5050/goclass/login",
-              data: queryArray
+              data: queryArray,
+              crossDomain: true
             })
-
-            //   .then(response => {
-            // this.$ajax({
-            //   method: "post",
-            //   headers: {
-            //     "Content-Type": "application/json;charset=utf-8"
-            //   },
-            //   // headers: { "Access-Control-Allow-Origin": "*" },
-            //   url: "http://lede.dalaomai.cn:5050/goclass/login",
-            //   data: queryArray
-            // })
             .then(function(res) {
-              if (response.status === 200) {
-                // console.log(res);
+              
+              if (res.status === 200) {
+                console.log(res);
+                if(res.data["accessToken"]){
+                  let tokenCur = res.data["accessToken"];
+                  // console.log(typeof tokenCur);
+                  that.$store.commit("SET_TOKEN", tokenCur);
+                  that.$router.push("/helloWorld");
+                }
+                // console.log(that.$store.state.token);
+
+                // console.log(res.data["accessToken"]);
                 // this.$store.commit("SET_TOKEN", response.data.token);
                 // this.$store.commit("GET_USER", response.data.user);
                 // this.$message({
                 //   message: "登陆成功",
                 //   type: "success"
                 // });
-                // this.$router.push({ name: "/" });
+                // that.$router.push({ name: "/helloWorld" });
+                
+              }else if(res.status === 404){
+
               }
             })
             .catch(function(error) {

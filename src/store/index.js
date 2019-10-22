@@ -8,9 +8,9 @@ Vue.use(Vuex)
 Vue.prototype.localData = localData;
 Vue.prototype.sessionData = sessionData;
 // 初始化时用sessionStore.getItem('token'),这样子刷新页面就无需重新登录
-const state = {
-  user: window.sessionStorage.getItem('user'),
-  token: window.sessionStorage.getItem('token'),
+const state = {//驱动应用的数据源
+  // user: window.sessionStorage.getItem('user'),
+  token: '',//window.sessionStorage.getItem('token'),
   taskLists: [],
   taskListName: []
 }
@@ -18,7 +18,9 @@ const mutations = {  //更改 Vuex 的 store 中的状态的唯一方法
   //将token保存到sessionStorage里，token表示登陆状态
   SET_TOKEN: (state, data) => {
     state.token = data
-    window.sessionStorage.setItem('token', data)
+    sessionData('set', 'token', state.token)
+    // window.sessionStorage.setItem('token', data)
+
   },
   //获取用户名
   GET_USER: (state, data) => {
@@ -83,7 +85,7 @@ const mutations = {  //更改 Vuex 的 store 中的状态的唯一方法
 
 }
 const getters = {   //实时监听state值的变化(最新状态)
-  getTaskList() {  //方法名随意,主要是用来承载变化的值
+  getTaskList() {  //获取任务列表
 
     return sessionData('get', 'taskLists')
   },

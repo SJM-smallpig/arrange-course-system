@@ -209,7 +209,7 @@ export default {
           }
         ],
         miniNums: "",
-        maxNums: "",
+        maxNums: ""
         // timeTable: [
         //   {
         //     section: "第1节课",
@@ -312,23 +312,45 @@ export default {
         return i.taskName == formData.taskName;
       });
       if (newLists.length == 0) {
-        that.$store.commit("SET_List", formData);
+        that.$store.commit("SET_List", formData); //缓存表单
       } else {
         that.$store.commit("UPDATE_List", formData);
       }
 
       // console.log(JSON.stringify(formData));
-
+      //创建排班任务
       that.$refs[formName].validate(valid => {
         if (valid) {
-          that.$router.push({
-            path: "@/components/rulesStage/RuleOneStage", //跳转路径
-            name: "ruleOneStage", //跳转路径的name值，不写跳转后页面取不到参数
-            // 参数
-            query: {
-              form: that.form
-            }
-          });
+          // that
+          //   .$axios({
+          //     url: "/api/class/grouping/createtask",
+          //     method: "post",
+          //     headers: {
+          //       "Content-Type": "application/json;charset=utf-8"
+          //     },
+          //     data: formData,
+          //     crossDomain: true
+          //   })
+          //   .then(function(res) {
+          //     if (res.status === 200) {
+          //       console.log(res);
+          //       that.$store.commit("SET_TOKEN", response.data.token);
+          //       that.$store.commit("GET_USER", response.data.user);
+                // this.$router.push({ name: "/helloWorld" });
+                //跳转
+                that.$router.push({
+                  path: "@/components/rulesStage/RuleOneStage", //跳转路径
+                  name: "ruleOneStage", //跳转路径的name值，不写跳转后页面取不到参数
+                  // 参数
+                  query: {
+                    form: that.form
+                  }
+                });
+            //   }
+            // })
+            // .catch(function(error) {
+            //   console.log(error);
+            // });
         } else {
           console.log("error submit!!");
           return false;
@@ -423,6 +445,5 @@ export default {
 }
 .td-dispaly {
   display: none;
-  
 }
 </style>

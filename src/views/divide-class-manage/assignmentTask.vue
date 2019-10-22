@@ -167,10 +167,19 @@ export default {
       });
     },
     //获取现有任务
-    getTaskListData() {
-      this.$axios
-        .get("http://lede.dalaomai.cn:5050/api/admin/class/grouping/taskstatus", {
-        })
+    getTasksStatusForClassStrategy() {
+      
+      let that =this;
+      console.log(that.$store.state.token);
+      that.$axios({
+        url: "http://lede.dalaomai.cn:5050/goclass/api/admin/timer/schedul/1",
+              method: "get",
+              headers: {
+                'Content-Type': 'application/json',//设置请求头请求格式为JSON
+                'token': that.$store.state.token
+              },
+              crossDomain: true
+            })
         .then(res => {
           console.log("数据是:", res);
         })
@@ -182,7 +191,7 @@ export default {
   created() {
     let that = this;
     that.getData();
-    that.getTaskListData();
+    that.getTasksStatusForClassStrategy();//获取现有任务
   },
   mounted() {}
 };

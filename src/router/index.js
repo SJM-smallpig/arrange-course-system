@@ -197,6 +197,28 @@ const router = new Router({
         keepAlive: true,
         requiresAuth: true
       }
+    },
+    {
+      path: '/loginFailed',
+      name: 'loginFailed',
+      component: () => import('@/views/loginFailed'),
+      meta: {
+        title: '404',
+        type: '',// 不需要鉴权
+        keepAlive: false,
+        requiresAuth: true
+      }
+    },
+    {
+      path: '/error',
+      name: 'error',
+      component: () => import('@/views/error'),
+      meta: {
+        title: '出错了',
+        type: '',// 不需要鉴权
+        keepAlive: false,
+        requiresAuth: true
+      }
     }
   ]
 })
