@@ -82,12 +82,35 @@ const router = new Router({
       name: 'assignmentTask',
       component: () => import('@/views/divide-class-manage/AssignmentTask'),
       meta: {
+        title: '创建任务',
+        type: '',// 不需要鉴权
+        keepAlive: true,
+        requiresAuth: true
+      }
+    },
+    {
+      path: '/setRules',
+      name: 'setRules',
+      component: () => import('@/views/divide-class-manage/setRules'),
+      meta: {
+        title: '设置规则',
+        type: '',// 不需要鉴权
+        keepAlive: true,
+        requiresAuth: true
+      }
+    },
+    {
+      path: '/taskLists',
+      name: 'taskLists',
+      component: () => import('@/views/divide-class-manage/taskLists'),
+      meta: {
         title: '任务列表',
         type: '',// 不需要鉴权
         keepAlive: true,
         requiresAuth: true
       }
     },
+    
     {
       path: '/exportExcel',
       name: 'exportExcel',
@@ -100,14 +123,14 @@ const router = new Router({
       }
     },
     {
-      path: '/setRules',
-      name: 'setRules',
-      component: () => import('@/views/divide-class-manage/SetRules'),
+      path: '/loginFailed',
+      name: 'loginFailed',
+      component: () => import('@/views/loginFailed'),
       meta: {
-        title: '设置规则',
+        title: '错误！',
         type: '',// 不需要鉴权
-        keepAlive: true,
-        requiresAuth: true
+        keepAlive: false,
+        requiresAuth: false
       }
     },
     {
@@ -199,13 +222,24 @@ const router = new Router({
       }
     },
     {
-      path: '/loginFailed',
-      name: 'loginFailed',
-      component: () => import('@/views/loginFailed'),
+      path: '/adjsutClassTime',
+      name: 'adjsutClassTime',
+      component: () => import('@/views/teacher-information-manage/adjsutClassTime'),
       meta: {
-        title: '404',
+        title: '申请上课时间',
         type: '',// 不需要鉴权
-        keepAlive: false,
+        keepAlive: true,
+        requiresAuth: true
+      }
+    },
+    {
+      path: '/createTeachSchedule',
+      name: 'createTeachSchedule',
+      component: () => import('@/views/createTeachSchedule'),
+      meta: {
+        title: '创建排课任务',
+        type: '',// 不需要鉴权
+        keepAlive: true,
         requiresAuth: true
       }
     },
@@ -217,27 +251,33 @@ const router = new Router({
         title: '出错了',
         type: '',// 不需要鉴权
         keepAlive: false,
-        requiresAuth: true
+        requiresAuth: false
       }
-    }
+    },
+    {
+      path: "*",
+      redirect: "/"
+}
   ]
 })
 
-// 注册全局钩子用来拦截导航
-// router.beforeEach((to, from, next) => {
-//   const token = store.state.token
-//   if (to.meta.requireAuth) { // 判断该路由是否需要登录权限
-//     if (token) { // 通过vuex state获取当前的token是否存在
-//       next()
-//     } else {
-//       console.log('该页面需要登陆')
-//       next({
-//         path: '/login'
-//         // query: {redirect: to.fullPath} // 将跳转的路由path作为参数，登录成功后跳转到该路由
-//       })
-//     }
-//   } else {
-//     next()
-//   }
-// })
+//注册全局钩子用来拦截导航
+router.beforeEach((to, from, next) => {
+  const token = store.state.token
+  if (to.meta.requiresAuth) { // 判断该路由是否需要登录权限
+ 
+    if (token) { // 通过vuex state获取当前的token是否存在
+      next();
+      
+    } else {
+      console.log('该页面需要登陆')
+      next({
+        path: '/error',
+        //query: {redirect: to.fullPath} // 将跳转的路由path作为参数，登录成功后跳转到该路由
+      })
+    }
+  } else {
+    next()
+  }
+})
 export default router

@@ -23,7 +23,7 @@
           round
           class="set-bt"
           @click="toSetRules(item.taskName)"
-        >设置</el-button>
+        >查看</el-button>
       </div>
     </el-card>
   </div>
@@ -53,49 +53,71 @@ export default {
     },
     //新建任务
     openAddName() {
-      let that = this;
-      that
-        .$prompt("请输入任务名称", "新建任务", {
-          confirmButtonText: "确定",
-          cancelButtonText: "取消",
-          inputPattern: /^[a-zA-Z0-9\u4e00-\u9fa5]+$/,
-          inputErrorMessage: "任务名称格式不正确，只能包含汉字，数字，字母"
-        })
-        .then(({ value }) => {
-          if (that.$store.state.taskListName.length == 0) {
-            let obj = {};
-            obj["taskName"] = value;
-            that.$store.commit("SET_List_NAME", obj);
-            // console.log(this.$store.state.taskListName);
-            that.$message({
-              type: "success",
-              message: "你的任务名称是: " + value
-            });
-          } else {
-            let array = that.$store.state.taskListName.filter(function(i) {
-              return i.taskName == value;
-            });
+       let that = this;
+      that.$router.push({
+        path: "@/views/divide-class-manage/setRules", //跳转路径
+        name: "setRules", //跳转路径的name值，不写跳转后页面取不到参数
+        // 参数
+        query: {
+        }
+      });
+      // let that = this;
+      // that
+      //   .$prompt("请输入任务名称", "新建任务", {
+      //     confirmButtonText: "确定",
+      //     cancelButtonText: "取消",
+      //     inputPattern: /^[a-zA-Z0-9\u4e00-\u9fa5]+$/,
+      //     inputErrorMessage: "任务名称格式不正确，只能包含汉字，数字，字母"
+      //   })
+      //   .then(({ value }) => {
+      //     if(that.taskNameArray.length == 0){
+      //       let obj = {};
+      //           obj["taskName"] = value;
+      //           that.taskNameArray.push(obj);
+      //           console.log( that.taskNameArray);
+      //           that.$message({
+      //         type: "success",
+      //         message: "你的任务名称是: " + value
+      //       });
+      //     }else{
+      //       loop:for (let i = 0; i < that.taskNameArray.length; i++) {
+             
+      //       for (let j in that.taskNameArray[i]) {
+              
+              
+      //         if (that.taskNameArray[i][j] == value) {
+               
+      //           alert("该任务已存在");
+      //           that.openAddName();
 
-            if (array.length != 0) {
-              alert("该任务已存在");
-              that.openAddName();
-            } else {
-              let obj = {};
-              obj["taskName"] = value;
-              that.$store.commit("SET_List_NAME", obj);
-              that.$message({
-                type: "success",
-                message: "你的任务名称是: " + value
-              });
-            }
-          }
-        })
-        .catch(() => {
-          that.$message({
-            type: "info",
-            message: "取消输入"
-          });
-        });
+      //         } else {
+                
+      //           let obj = {};
+      //           obj["taskName"] = value;
+      //           that.taskNameArray.push(obj);
+      //           console.log( that.taskNameArray);
+      //           that.$message({
+      //         type: "success",
+      //         message: "你的任务名称是: " + value
+      //       });
+      //           break loop;
+      //       //     that.taskNameArray.push(obj);
+      //       //     that.$message({
+      //       //       type: "success",
+      //       //       message: "你的任务名称是: " + value
+      //       //     });
+      //         }
+      //       }
+      //     }
+      //     }
+         
+      //   })
+      //   .catch(() => {
+      //     that.$message({
+      //       type: "info",
+      //       message: "取消输入"
+      //     });
+      //   });
     },
     //删除任务
     deleteTask(name) {
@@ -107,17 +129,76 @@ export default {
           type: "warning"
         })
         .then(() => {
-          for (let i = 0; i < that.taskNameArray.length; i++) {
-            if (that.taskNameArray[i].taskName == name) {
-              // this.taskNameArray.splice(i, 1);
-              that.$store.commit("DEL_List_NAME", name);
-              console.log(that.$store.getters.getTaskList);
-              that.$message({
-                type: "success",
-                message: "删除成功!"
-              });
-            }
-          }
+          that
+            .$axios({
+              url: that.$root.URL + "/delete?taskId=" + name,
+              //url: "/api/goclass/admin/timer/schedul/1",
+              method: "delete",
+              crossDomain: true
+            })
+            .then(res => {
+              if (res.status == 200) {
+                console.log("删除成功");
+                for (let i = 0; i < that.taskNameArray.length; i++) {
+                  if (that.taskNameArray[i].taskName == name) {
+                    that.taskNameArray.splice(i, 1);
+                    // this.taskNameArray.splice(i, 1);
+                    // that.$store.commit("DEL_List_NAME", name);
+                    // console.log(that.$store.getters.getTaskList);
+                    that.$message({
+                      type: "success",
+                      message: "删除成功!"
+                    });
+                  }
+                }
+              }
+            })
+            .catch(function(error) {
+              if (error.response) {
+                if (error.response.status === 404) {
+                  that.$router.push({
+                    path: "@/views/loginFailed", //跳转路径
+                    name: "loginFailed", //跳转路径的name值，不写跳转后页面取不到参数
+                    // 参数
+                    query: {
+                      error: "correct"
+                    }
+                  });
+                }
+              } else if (error.request) {
+                that.$router.push({
+                  path: "@/views/loginFailed", //跳转路径
+                  name: "loginFailed", //跳转路径的name值，不写跳转后页面取不到参数
+                  // 参数
+                  query: {
+                    error: "error"
+                  }
+                });
+                console.log(error.request);
+              } else {
+                that.$router.push({
+                  path: "@/views/loginFailed", //跳转路径
+                  name: "loginFailed", //跳转路径的name值，不写跳转后页面取不到参数
+                  // 参数
+                  query: {
+                    error: "error"
+                  }
+                });
+                console.log("Error", error.message);
+              }
+              console.log(error.request);
+            });
+          // for (let i = 0; i < that.taskNameArray.length; i++) {
+          //   if (that.taskNameArray[i].taskName == name) {
+          //     // this.taskNameArray.splice(i, 1);
+          //     that.$store.commit("DEL_List_NAME", name);
+          //     console.log(that.$store.getters.getTaskList);
+          //     that.$message({
+          //       type: "success",
+          //       message: "删除成功!"
+          //     });
+          //   }
+          // }
         })
         .catch(() => {
           that.$message({
@@ -158,7 +239,7 @@ export default {
     toSetRules(taskName) {
       let that = this;
       that.$router.push({
-        path: "@/views/SetRules", //跳转路径
+        path: "@/views/divide-class-manage/setRules", //跳转路径
         name: "setRules", //跳转路径的name值，不写跳转后页面取不到参数
         // 参数
         query: {
@@ -168,30 +249,90 @@ export default {
     },
     //获取现有任务
     getTasksStatusForClassStrategy() {
-      
-      let that =this;
-      console.log(that.$store.state.token);
-      that.$axios({
-        url: "http://lede.dalaomai.cn:5050/goclass/api/admin/timer/schedul/1",
-              method: "get",
-              headers: {
-                'Content-Type': 'application/json',//设置请求头请求格式为JSON
-                'token': that.$store.state.token
-              },
-              crossDomain: true
-            })
-        .then(res => {
-          console.log("数据是:", res);
+      // that
+      //   .$axios({
+      //     url: "/api/goclass/class/grouping/taskstatus",
+      //     //url: "/api/goclass/admin/timer/schedul/1",
+      //     method: "get",
+      //     crossDomain: true
+      //   })
+      //   .then(res => {
+      //     let objTemp = {};
+      //     let tasksStageMap = res.data.tasksStageMap;
+      //     console.log(tasksStageMap)
+      //     for (let i in tasksStageMap) {
+      //       objTemp["taskName"] = i;
+      //       that.taskNameArray.push(objTemp);
+      //       objTemp = {};
+      //     }
+      //   })
+      //   .catch(e => {
+      //     console.log("获取数据失败");
+      //   });
+
+      let that = this;
+      that.taskNameArray = [];
+      // console.log(that.$store.state.token);
+      that
+        .$axios({
+          url: that.$root.URL + "/taskstatus",
+          //url: "/api/goclass/admin/timer/schedul/1",
+          method: "get",
+          crossDomain: true
+          
         })
-        .catch(e => {
-          console.log("获取数据失败");
+        .then(res => {
+          // console.log("数据是:", res);
+          // that.taskNameArray = res;
+          let nameObj = res.data.tasksStageMap;
+          let obj = {};
+          for (let i in nameObj) {
+            obj["taskName"] = i;
+            that.taskNameArray.push(obj);
+            obj = {};
+          }
+        })
+        .catch(function(error) {
+          if (error.response) {
+            if (error.response.status === 404) {
+              that.$router.push({
+                path: "@/views/loginFailed", //跳转路径
+                name: "loginFailed", //跳转路径的name值，不写跳转后页面取不到参数
+                // 参数
+                query: {
+                  error: "correct"
+                }
+              });
+            }
+          } else if (error.request) {
+            that.$router.push({
+              path: "@/views/loginFailed", //跳转路径
+              name: "loginFailed", //跳转路径的name值，不写跳转后页面取不到参数
+              // 参数
+              query: {
+                error: "error"
+              }
+            });
+            console.log(error.request);
+          } else {
+            that.$router.push({
+              path: "@/views/loginFailed", //跳转路径
+              name: "loginFailed", //跳转路径的name值，不写跳转后页面取不到参数
+              // 参数
+              query: {
+                error: "error"
+              }
+            });
+            console.log("Error", error.message);
+          }
+          console.log(error.request);
         });
     }
   },
   created() {
     let that = this;
     that.getData();
-    that.getTasksStatusForClassStrategy();//获取现有任务
+    that.getTasksStatusForClassStrategy(); //获取现有任务
   },
   mounted() {}
 };

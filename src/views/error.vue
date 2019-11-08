@@ -1,6 +1,7 @@
 <template>
   <div class="e-main">
   <img class="e-body" src="../assets/error.png">
+  <div class="word">访问该页面需要登录！请点击<span @click="toLogin()">登录</span></div>
   </div>
 </template>
 
@@ -14,7 +15,12 @@ export default {
   },
   watch: {},
   computed: {},
-  methods: {},
+  methods: {
+    toLogin(){
+      let that = this;
+      that.$router.push("/login");
+    }
+  },
   created() {},
   mounted() {}
 };
@@ -32,7 +38,19 @@ export default {
 }
 .e-body{
     width: 100%;
-    height: 667px;
+    height: 90%;
 
+}
+.word{
+  float: left;
+  position: absolute;
+  bottom:200px;
+  left: 40%;
+  font-size: 25px;
+  font-weight: bold;
+}
+.word span{
+  color: dodgerblue;
+  cursor: pointer;
 }
 </style>

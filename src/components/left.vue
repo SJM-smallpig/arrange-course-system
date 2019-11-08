@@ -2,7 +2,7 @@
   <div class="main">
         <el-col class="el-col">
         <el-menu
-          default-active="1"
+          :default-active="$route.name"
           class="el-menu-vertical-demo"
           @open="handleOpen"
           @close="handleClose"
@@ -10,6 +10,7 @@
           text-color="#fff"
           active-text-color="#ffd04b"
           :collapse="isCollapse"
+          :router="true"
         >
           <el-submenu index="1">
             <template slot="title">
@@ -17,14 +18,14 @@
               <span>学生信息管理</span>
             </template>
             <el-menu-item-group>
-              <el-menu-item class="main-item" index="1-1">选课</el-menu-item>
+              <!--<el-menu-item class="main-item" index="1-1">选课</el-menu-item>-->
               <el-menu-item
                 class="main-item"
-                index="/studentLesson"
-                @click="goTo('/studentLesson')"
+                index="createTeachSchedule"
+                @click="goTo('/createTeachSchedule')"
               >查课表</el-menu-item>
-              <el-menu-item class="main-item" index="2-5">学生信息添加</el-menu-item>
-              <el-menu-item class="main-item" index="2-6">学生信息查询</el-menu-item>
+               <!--<el-menu-item class="main-item" index="2-5">学生信息添加</el-menu-item>
+              <el-menu-item class="main-item" index="2-6">学生信息查询</el-menu-item>-->
             </el-menu-item-group>
           </el-submenu>
 
@@ -34,16 +35,16 @@
               <span>教师信息管理</span>
             </template>
             <el-menu-item-group>
-              <el-menu-item class="main-item" index="2-1" @click="goTo('/studentLesson')">申请上课时间</el-menu-item>
-              <el-menu-item class="main-item" index="2-2">申请调课</el-menu-item>
+              <el-menu-item class="main-item" index="adjsutClassTime" @click="goTo('/adjsutClassTime')">申请上课时间</el-menu-item>
+              <!--<el-menu-item class="main-item" index="2-2">申请调课</el-menu-item>
               <el-menu-item class="main-item" index="2-3">查课表</el-menu-item>
               <el-menu-item class="main-item" index="2-4">查学生名单</el-menu-item>
               <el-menu-item class="main-item" index="2-5">教师信息添加</el-menu-item>
-              <el-menu-item class="main-item" index="2-6">教师信息查询</el-menu-item>
+              <el-menu-item class="main-item" index="2-6">教师信息查询</el-menu-item>-->
             </el-menu-item-group>
           </el-submenu>
 
-          <el-submenu index="3">
+          <!--<el-submenu index="3">
             <template slot="title">
               <i class="el-icon-s-order"></i>
               <span>课程信息管理</span>
@@ -87,7 +88,7 @@
               <el-menu-item class="main-item" index="6-3">调课管理</el-menu-item>
               <el-menu-item class="main-item" index="6-4">假期管理</el-menu-item>
             </el-menu-item-group>
-          </el-submenu>
+          </el-submenu>-->
 
           <el-submenu index="7">
             <template slot="title">
@@ -96,12 +97,13 @@
             </template>
             <el-menu-item-group>
               <template slot="title">分班规则</template>
-              <el-menu-item class="main-item" index="7-1" @click="goTo('/assignmentTask')">分班任务管理</el-menu-item>
+              <el-menu-item class="main-item" index="assignmentTask" @click="goTo('/assignmentTask')">分班任务管理</el-menu-item>
             </el-menu-item-group>
             <el-menu-item-group>
               <template slot="title">分班查看</template>
-              <el-menu-item class="main-item" index="7-4" @click="goTo('/adminClass')">行政班</el-menu-item>
-              <el-menu-item class="main-item" index="7-5" @click="goTo('/teachClass')">教学班</el-menu-item>
+              <el-menu-item class="main-item" index="taskLists" @click="goTo('/taskLists')">任务列表</el-menu-item>
+            <!--<el-menu-item class="main-item" index="adminClass" @click="goTo('/adminClass')">行政班</el-menu-item>
+              <el-menu-item class="main-item" index="teachClass" @click="goTo('/teachClass')">教学班</el-menu-item>-->
             </el-menu-item-group>
           </el-submenu>
         </el-menu>
@@ -118,7 +120,9 @@ export default {
       isCollapse: false
     };
   },
-  watch: {},
+  watch: {
+   
+  },
   computed: {},
   methods: {
     handleOpen(key, keyPath) {
@@ -133,7 +137,9 @@ export default {
     }
   },
   created() {},
-  mounted() {}
+  mounted() {
+    
+  }
 };
 </script>
 <style scoped>

@@ -104,54 +104,83 @@ export default {
           let username = that.ruleForm.userName;
           let password = that.ruleForm.password;
           let obj = {};
-          obj["username"] = username;
+          obj["accounts"] = username;
           obj["password"] = password;
-          let queryArray = JSON.stringify(obj);
+          let queryArray = obj;
           console.log(queryArray);
           that.common = true;
-          // that.sessionData("set", "username", username);
-          // that.sessionData("set", "password", password);
+          that.sessionData("set", "username", username);
+          that.sessionData("set", "password", password);
           // this.$router.push("/helloWorld");
           // } else {
           //   console.log("error submit!!");
           //   return false;
           // }
+
+
+
           that.$axios({
-            url: "/api/goclass/login",
+            url: "http://lede.dalaomai.cn:5051/goclass/api/user/login",
               method: "post",
-              headers: {
-                "Content-Type": "application/json;charset=utf-8"
-              },
               data: queryArray,
-              crossDomain: true
+              crossDomain: true,
+              withCredentials:true
+
             })
             .then(function(res) {
               
               if (res.status === 200) {
-                console.log(res);
-                if(res.data["accessToken"]){
-                  let tokenCur = res.data["accessToken"];
-                  // console.log(typeof tokenCur);
-                  that.$store.commit("SET_TOKEN", tokenCur);
-                  that.$router.push("/helloWorld");
-                }
+                // console.log(res.data.date.sessionId);
+                that.$store.commit("SET_TOKEN", res.data.date.sessionId);
+               
+                that.$router.push("/helloWorld");
+
+                // if(res.data["accessToken"]){
+                //   let tokenCur = res.data["accessToken"];
+                //   console.log(typeof tokenCur);
+                //   that.$store.commit("SET_TOKEN", tokenCur);
+                  
+                // }
                 // console.log(that.$store.state.token);
 
-                // console.log(res.data["accessToken"]);
-                // this.$store.commit("SET_TOKEN", response.data.token);
-                // this.$store.commit("GET_USER", response.data.user);
-                // this.$message({
-                //   message: "登陆成功",
-                //   type: "success"
-                // });
-                // that.$router.push({ name: "/helloWorld" });
+              
                 
-              }else if(res.status === 404){
-
               }
             })
             .catch(function(error) {
-              console.log(error);
+              if (error.response) {
+                if (error.response.status === 404) {
+                  that.$router.push({
+                    path: "@/views/loginFailed", //跳转路径
+                    name: "loginFailed", //跳转路径的name值，不写跳转后页面取不到参数
+                    // 参数
+                    query: {
+                      error: "correct"
+                    }
+                  });
+                }
+              } else if (error.request) {
+                that.$router.push({
+                  path: "@/views/loginFailed", //跳转路径
+                  name: "loginFailed", //跳转路径的name值，不写跳转后页面取不到参数
+                  // 参数
+                  query: {
+                    error: "error"
+                  }
+                });
+                console.log(error.request);
+              } else {
+                that.$router.push({
+                  path: "@/views/loginFailed", //跳转路径
+                  name: "loginFailed", //跳转路径的name值，不写跳转后页面取不到参数
+                  // 参数
+                  query: {
+                    error: "error"
+                  }
+                });
+                console.log("Error", error.message);
+              }
+              console.log(error.request);
             });
         } else {
           console.log("error submit!!");

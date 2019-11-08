@@ -3,7 +3,7 @@
     <el-page-header @back="goBack" content="设置分班规则" class="back-head"></el-page-header>
     <div class="s-form">
       <el-form ref="form" :model="form" label-width="180px" class="form" label-position="right">
-        <el-form-item label="任务名称">
+        <el-form-item label="任务名称" v-show="isShowName">
           <span class="task-name">{{form.taskName}}</span>
         </el-form-item>
         <el-form-item label="年级">
@@ -21,35 +21,36 @@
         </el-form-item>
         <el-form-item label="学生选科组合人数">
           <el-table
-            v-model="form.studentData"
-            :data="form.studentData"
+            v-model="form.sectionStudentNumber"
+            :data="form.sectionStudentNumber"
+            :key="form.index"
             border
             size="mini"
             class="st-table"
             id="st-table"
             :header-cell-style="{background:'#eef1f6',color:'#606266'}"
           >
-            <el-table-column prop="subject" label="科目" align="center" width="60px"></el-table-column>
-            <el-table-column prop="hgp" label="历地政" align="center" width="60px"></el-table-column>
-            <el-table-column prop="hgb" label="历地生" align="center" width="60px"></el-table-column>
-            <el-table-column prop="hgs" label="历地化" align="center" width="60px"></el-table-column>
-            <el-table-column prop="hpb" label="历政生" align="center" width="60px"></el-table-column>
-            <el-table-column prop="hps" label="历政化" align="center" width="60px"></el-table-column>
-            <el-table-column prop="hbs" label="历生化" align="center" width="60px"></el-table-column>
-            <el-table-column prop="pgp" label="物地政" align="center" width="60px"></el-table-column>
-            <el-table-column prop="pgb" label="物地生" align="center" width="60px"></el-table-column>
-            <el-table-column prop="pgs" label="物地化" align="center" width="60px"></el-table-column>
-            <el-table-column prop="ppb" label="物政生" align="center" width="60px"></el-table-column>
-            <el-table-column prop="pps" label="物政化" align="center" width="60px"></el-table-column>
-            <el-table-column prop="pbs" label="物生化" align="center" width="60px"></el-table-column>
+            <el-table-column prop="1" label="科目" align="center" width="60px"></el-table-column>
+            <el-table-column prop="50" label="历地政" align="center" width="60px"></el-table-column>
+            <el-table-column prop="26" label="历地生" align="center" width="60px"></el-table-column>
+            <el-table-column prop="22" label="历地化" align="center" width="60px"></el-table-column>
+            <el-table-column prop="42" label="历政生" align="center" width="60px"></el-table-column>
+            <el-table-column prop="38" label="历政化" align="center" width="60px"></el-table-column>
+            <el-table-column prop="14" label="历生化" align="center" width="60px"></el-table-column>
+            <el-table-column prop="49" label="物地政" align="center" width="60px"></el-table-column>
+            <el-table-column prop="25" label="物地生" align="center" width="60px"></el-table-column>
+            <el-table-column prop="21" label="物地化" align="center" width="60px"></el-table-column>
+            <el-table-column prop="41" label="物政生" align="center" width="60px"></el-table-column>
+            <el-table-column prop="37" label="物政化" align="center" width="60px"></el-table-column>
+            <el-table-column prop="13" label="物生化" align="center" width="60px"></el-table-column>
             <el-table-column prop="sum" label="总计" align="center" width="60px"></el-table-column>
           </el-table>
         </el-form-item>
 
         <el-form-item label="老师科目人数">
           <el-table
-            v-model="form.teachData"
-            :data="form.teachData"
+            v-model="form.subjectTeacherNumber"
+            :data="form.subjectTeacherNumber"
             border
             size="mini"
             class="t-table"
@@ -57,9 +58,9 @@
             :header-cell-style="{background:'#eef1f6',color:'#606266'}"
           >
             <el-table-column prop="subject" label="科目" align="center" width="80px"></el-table-column>
-            <el-table-column prop="Chinese" label="语文" align="center" width="80px"></el-table-column>
+            <!--<el-table-column prop="Chinese" label="语文" align="center" width="80px"></el-table-column>
             <el-table-column prop="Math" label="数学" align="center" width="80px"></el-table-column>
-            <el-table-column prop="English" label="英语" align="center" width="80px"></el-table-column>
+            <el-table-column prop="English" label="英语" align="center" width="80px"></el-table-column>-->
             <el-table-column prop="Physics" label="物理" align="center" width="80px"></el-table-column>
             <el-table-column prop="Chemistry" label="化学" align="center" width="80px"></el-table-column>
             <el-table-column prop="Biology" label="生物" align="center" width="80px"></el-table-column>
@@ -85,6 +86,7 @@
             placeholder="请输入数字"
             style="width:200px"
             class="input"
+            :disabled="edit"
           ></el-input>
         </el-form-item>
         <el-form-item
@@ -103,6 +105,26 @@
             style="width:200px"
             placeholder="请输入数字"
             class="input"
+            :disabled="edit"
+          ></el-input>
+        </el-form-item>
+        <el-form-item
+          label="任务运行时间"
+          prop="runingTime"
+          :rules="[
+                    { required: true, message: '该空不能为空'},
+                    { type: 'number', message: '该空必须为数字值'}
+                    ]"
+        >
+          <el-input
+            type="text"
+            v-model.number="form.runingTime"
+            autocomplete="off"
+            maxlength="2"
+            style="width:200px"
+            placeholder="请输入数字"
+            class="input"
+            :disabled="edit"
           ></el-input>
         </el-form-item>
         <!--<el-form-item label="课程时间设置">
@@ -170,17 +192,19 @@ export default {
   props: {},
   data() {
     return {
+      edit: false,
       addShow: true,
+      taskId: "",
       form: {
         taskName: "",
         grade: "高一",
         classCategory: "行政班",
-        teachData: [
+        subjectTeacherNumber: [
           {
             subject: "人数",
-            Chinese: "173",
-            Math: "260",
-            English: "55",
+            // Chinese: "173",
+            // Math: "260",
+            // English: "55",
             Physics: "52",
             Chemistry: "30",
             Biology: "50",
@@ -190,33 +214,19 @@ export default {
             sum: ""
           }
         ],
-        studentData: [
-          {
-            subject: "人数",
-            hgp: "173",
-            hgb: "500",
-            hgs: "500",
-            hpb: "55",
-            hps: "752",
-            hbs: "130",
-            pgp: "457",
-            pgb: "50",
-            pgs: "200",
-            ppb: "150",
-            pps: "20",
-            pbs: "585",
-            sum: ""
-          }
-        ],
+        sectionStudentNumber: [],
         miniNums: "",
-        maxNums: ""
+        maxNums: "",
+        runingTime: ""
         // timeTable: [
         //   {
         //     section: "第1节课",
         //     time: { startTime: "07:00", endTime: "07:40" }
         //   }
         // ]
-      }
+      },
+      isNameExit: false,
+      isShowName: true
     };
   },
   watch: {},
@@ -227,6 +237,7 @@ export default {
   },
   methods: {
     //求和
+
     getSum(obj) {
       var arr = [];
       for (let i in obj) {
@@ -306,82 +317,301 @@ export default {
     },
     //提交表单
     submitForm(formName, formData) {
-      let taskLists = this.$store.state.taskLists;
+      // let taskLists = this.$store.state.taskLists;
       let that = this;
-      var newLists = taskLists.filter(function(i) {
-        return i.taskName == formData.taskName;
-      });
-      if (newLists.length == 0) {
-        that.$store.commit("SET_List", formData); //缓存表单
-      } else {
-        that.$store.commit("UPDATE_List", formData);
-      }
+      // var newLists = taskLists.filter(function(i) {
+      //   return i.taskName == formData.taskName;
+      // });
+      // if (newLists.length == 0) {
+      //   that.$store.commit("SET_List", formData); //缓存表单
+      // } else {
+      //   that.$store.commit("UPDATE_List", formData);
+      // }
+      if (that.isNameExit == false) {
+        console.log("访问");
+        let form = JSON.parse(JSON.stringify(formData));
+        let studentDataForm = form.sectionStudentNumber[0];
+        let teachDataForm = form.subjectTeacherNumber[0];
+        let newStudentData = [];
+        let newTeachData = [];
 
-      // console.log(JSON.stringify(formData));
-      //创建排班任务
-      that.$refs[formName].validate(valid => {
-        if (valid) {
-          // that
-          //   .$axios({
-          //     url: "/api/class/grouping/createtask",
-          //     method: "post",
-          //     headers: {
-          //       "Content-Type": "application/json;charset=utf-8"
-          //     },
-          //     data: formData,
-          //     crossDomain: true
-          //   })
-          //   .then(function(res) {
-          //     if (res.status === 200) {
-          //       console.log(res);
-          //       that.$store.commit("SET_TOKEN", response.data.token);
-          //       that.$store.commit("GET_USER", response.data.user);
-                // this.$router.push({ name: "/helloWorld" });
-                //跳转
+        for (let i in studentDataForm) {
+          newStudentData.push(studentDataForm[i]);
+        }
+        for (let j in teachDataForm) {
+          newTeachData.push(teachDataForm[j]);
+        }
+        newStudentData.pop(1);
+        newStudentData.shift(1);
+        newTeachData.pop(1);
+        newTeachData.shift(1);
+
+        let arrTemp = [];
+        arrTemp[0] = newStudentData[0];
+        arrTemp[1] = newStudentData[2];
+        arrTemp[2] = newStudentData[6];
+        arrTemp[3] = newStudentData[4];
+        arrTemp[4] = newStudentData[8];
+        arrTemp[5] = newStudentData[10];
+        arrTemp[6] = newStudentData[1];
+        arrTemp[7] = newStudentData[3];
+        arrTemp[8] = newStudentData[7];
+        arrTemp[9] = newStudentData[5];
+        arrTemp[10] = newStudentData[9];
+        arrTemp[11] = newStudentData[11];
+        form.sectionStudentNumber = arrTemp;
+        form.subjectTeacherNumber = newTeachData;
+        console.log(arrTemp);
+        let maxAndMinClassStudentNumber = [];
+
+        maxAndMinClassStudentNumber.push(form.maxNums);
+        maxAndMinClassStudentNumber.push(form.miniNums);
+        delete form.miniNums;
+        delete form.maxNums;
+        delete form.classCategory;
+        form["maxAndMinClassStudentNumber"] = maxAndMinClassStudentNumber;
+        form["runingTime"] = form["runingTime"].toString();
+        // let newForm = JSON.stringify(form);
+        console.log(typeof form["runingTime"]);
+        //创建排班任务
+        that.$refs[formName].validate(valid => {
+          if (valid) {
+            that
+              .$axios({
+                url: this.$root.URL + "/createtask",
+                method: "post",
+                headers: {
+                  "Content-Type": "application/json;charset=utf-8"
+                },
+                data: JSON.stringify(form),
+                crossDomain: true
+              })
+
+              .then(function(res) {
+                if (res.status === 200) {
+                  // console.log(res);
+                  // that.$store.commit("SET_TOKEN", response.data.token);
+                  // that.$store.commit("GET_USER", response.data.user);
+                  // this.$router.push({ name: "/helloWorld" });
+                  //跳转
+                  // console.log(JSON.stringify(form));
+                  if (res.data.message == "ok") {
+                    that.taskId = res.data.taskId;
+                    // console.log(res.data)
+                  }
+                  console.log(that.form.sectionStudentNumber);
+                  that.$router.push({
+                    path: "@/components/rulesStage/RuleOneStage", //跳转路径
+                    name: "ruleOneStage", //跳转路径的name值，不写跳转后页面取不到参数
+                    // 参数
+                    query: {
+                      form: that.form,
+                      taskId: that.taskId
+                    }
+                  });
+                }
+              })
+              .catch(function(error) {
+                if (error.response) {
+                  if (error.response.status === 404) {
+                    that.$router.push({
+                      path: "@/views/loginFailed", //跳转路径
+                      name: "loginFailed", //跳转路径的name值，不写跳转后页面取不到参数
+                      // 参数
+                      query: {
+                        error: "correct"
+                      }
+                    });
+                  }
+                } else {
+                  that.$router.push({
+                    path: "@/views/loginFailed", //跳转路径
+                    name: "loginFailed", //跳转路径的name值，不写跳转后页面取不到参数
+                    // 参数
+                    query: {
+                      error: "error"
+                    }
+                  });
+                  console.log("Error", error.message);
+                }
+                console.log(error.request);
+              });
+          } else {
+            console.log("error submit!!");
+            return false;
+          }
+        });
+      } else {
+        that.$router.push({
+          path: "@/components/rulesStage/RuleOneStage", //跳转路径
+          name: "ruleOneStage", //跳转路径的name值，不写跳转后页面取不到参数
+          // 参数
+          query: {
+            form: that.form,
+            taskId: that.form.taskName
+          }
+        });
+      }
+    },
+    getTaskRule(taskId) {
+      let that = this;
+      if (taskId != undefined) {
+        that
+          .$axios({
+            url: this.$root.URL + "/rule?taskId=" + taskId,
+            method: "get",
+            crossDomain: true
+          })
+
+          .then(function(res) {
+            if (res.status === 200) {
+              if (res.data.statusCode == 0) {
+                that.edit = true;
+                that.isNameExit = true;
+                that.form.miniNums =
+                  res.data.rule.maxAndMinClassStudentNumber[0];
+                that.form.maxNums =
+                  res.data.rule.maxAndMinClassStudentNumber[1];
+                that.form.runingTime = res.data.rule.runing_time;
+              } else {
+                that.isNameExit = false;
+              }
+            }
+          })
+          .catch(function(error) {
+            if (error.response) {
+              if (error.response.status === 404) {
                 that.$router.push({
-                  path: "@/components/rulesStage/RuleOneStage", //跳转路径
-                  name: "ruleOneStage", //跳转路径的name值，不写跳转后页面取不到参数
+                  path: "@/views/loginFailed", //跳转路径
+                  name: "loginFailed", //跳转路径的name值，不写跳转后页面取不到参数
                   // 参数
                   query: {
-                    form: that.form
+                    error: "correct"
                   }
                 });
-            //   }
-            // })
-            // .catch(function(error) {
-            //   console.log(error);
-            // });
-        } else {
-          console.log("error submit!!");
-          return false;
-        }
-      });
+              }
+            } else {
+              that.$router.push({
+                path: "@/views/loginFailed", //跳转路径
+                name: "loginFailed", //跳转路径的name值，不写跳转后页面取不到参数
+                // 参数
+                query: {
+                  error: "error"
+                }
+              });
+              console.log("Error", error.message);
+            }
+            console.log(error.request);
+          });
+      }
     }
   },
   created() {
-    // console.log(this.$store.state.taskLists)
+    // console.log(this.taskId);
+
+    let that = this;
+    that
+      .$axios({
+        url: this.$root.URL + "/data?object=student",
+        method: "get",
+        crossDomain: true
+      })
+      .then(function(res) {
+        if (res.status === 200) {
+          that.form.sectionStudentNumber.push(res.data);
+        }
+      })
+      .catch(function(error) {
+        if (error.response) {
+          if (error.response.status === 404) {
+            that.$router.push({
+              path: "@/views/loginFailed", //跳转路径
+              name: "loginFailed", //跳转路径的name值，不写跳转后页面取不到参数
+              // 参数
+              query: {
+                error: "correct"
+              }
+            });
+          }
+        } else if (error.request) {
+          that.$router.push({
+            path: "@/views/loginFailed", //跳转路径
+            name: "loginFailed", //跳转路径的name值，不写跳转后页面取不到参数
+            // 参数
+            query: {
+              error: "error"
+            }
+          });
+          console.log(error.request);
+        } else {
+          that.$router.push({
+            path: "@/views/loginFailed", //跳转路径
+            name: "loginFailed", //跳转路径的name值，不写跳转后页面取不到参数
+            // 参数
+            query: {
+              error: "error"
+            }
+          });
+          console.log("Error", error.message);
+        }
+        console.log(error.request);
+      });
+
+    // console.log(JSON.stringify(this.form.studentData))
   },
   mounted() {
     var that = this;
-    let params = that.$route.query;
 
-    //获取当前任务名
-    let studentData = that.form.studentData[0];
-    let teachData = that.form.teachData[0];
+    //计算总和
+    // console.log(that.form.studentData[0]);
+    // let studentData = that.form.studentData[0];
+    // let teachData = that.form.teachData[0];
     // console.log(studentData)
-    that.getSum(studentData);
-    that.getSum(teachData);
-    let taskList = that.$store.state.taskLists;
+    // that.getSum(studentData);
+    // that.getSum(teachData);
+
+    // let taskList = that.$store.state.taskLists;
     //若存在数据则先加载
-    let currentList = taskList.filter(function(i) {
-      return i.taskName == params.taskName;
-    });
-    if (currentList.length == 0) {
-      // that.form = {}
+    // let currentList = taskList.filter(function(i) {
+    //   return i.taskName == params.taskName;
+    // });
+    // if (currentList.length == 0) {
+    //   // that.form = {}
+    // } else {
+    //   that.form = currentList[0];
+    // }
+    if (that.$route.query["taskName"] == undefined) {
+      that.isShowName = false;
     } else {
-      that.form = currentList[0];
+      that.isShowName = true;
+      let params = that.$route.query;
+
+      that.form.taskName = params.taskName;
+      that.getTaskRule(that.form.taskName);
     }
-    that.form.taskName = params.taskName;
+    if (that.$route.params.taskId != undefined) {
+      that.edit = true;
+      let paramsData = that.$route.params;
+      that.form.miniNums = paramsData.formData[0].miniNums;
+      that.form.maxNums = paramsData.formData[0].maxNums;
+      that.form.runingTime = paramsData.formData[0].runingTime;
+    }else{
+      that.edit = false;
+    }
+    //获取前页面传递的taskname
+
+    // if (that.form.taskName != undefined || that.form.taskName != "") {
+    //   //若存在该任务，填上数据
+    //   that.getTaskRule(that.form.taskName);
+    // }
+
+    // let backTaskId = that.$route.params.taskId; //历史back回去的id
+    // console.log(backTaskId)
+    // if(backTaskId != undefined || backTaskId !="" || that.form.taskName != undefined || that.form.taskName !=""){
+    //   that.getTaskRule(backTaskId);
+    // }
+
+    //获取当前状态
   },
   updated() {
     // this.getSum(); //求和
@@ -422,7 +652,7 @@ export default {
   color: #409eff;
 }
 .t-table {
-  width: 881px;
+  width: 641px;
 }
 .st-table {
   width: 841px;

@@ -17,40 +17,44 @@
         </el-form-item>
         <el-form-item label="学生选科人数">
           <el-table
-            v-show="item.studentData"
-            v-model="item.studentData"
-            :data="item.studentData"
+            v-show="item.sectionStudentNumber"
+            v-model="item.sectionStudentNumber"
+            :data="item.sectionStudentNumber"
             border
             size="mini"
             class="s-table"
             :header-cell-style="{background:'#eef1f6',color:'#606266'}"
           >
-            <el-table-column prop="subject" label="科目" align="center" width="50px"></el-table-column>
-            <el-table-column prop="Chinese" label="语文" align="center" width="50px"></el-table-column>
-            <el-table-column prop="Math" label="数学" align="center" width="50px"></el-table-column>
-            <el-table-column prop="English" label="英语" align="center" width="50px"></el-table-column>
-            <el-table-column prop="Physics" label="物理" align="center" width="50px"></el-table-column>
-            <el-table-column prop="Chemistry" label="化学" align="center" width="50px"></el-table-column>
-            <el-table-column prop="Biology" label="生物" align="center" width="50px"></el-table-column>
-            <el-table-column prop="Geography" label="地理" align="center" width="50px"></el-table-column>
-            <el-table-column prop="History" label="历史" align="center" width="50px"></el-table-column>
-            <el-table-column prop="sum" label="总计" align="center" width="50px"></el-table-column>
+            <el-table-column prop="1" label="科目" align="center" width="60px"></el-table-column>
+            <el-table-column prop="13" label="历地政" align="center" width="60px"></el-table-column>
+            <el-table-column prop="21" label="历地生" align="center" width="60px"></el-table-column>
+            <el-table-column prop="37" label="历地化" align="center" width="60px"></el-table-column>
+            <el-table-column prop="25" label="历政生" align="center" width="60px"></el-table-column>
+            <el-table-column prop="41" label="历政化" align="center" width="60px"></el-table-column>
+            <el-table-column prop="49" label="历生化" align="center" width="60px"></el-table-column>
+            <el-table-column prop="14" label="物地政" align="center" width="60px"></el-table-column>
+            <el-table-column prop="22" label="物地生" align="center" width="60px"></el-table-column>
+            <el-table-column prop="38" label="物地化" align="center" width="60px"></el-table-column>
+            <el-table-column prop="26" label="物政生" align="center" width="60px"></el-table-column>
+            <el-table-column prop="42" label="物政化" align="center" width="60px"></el-table-column>
+            <el-table-column prop="50" label="物生化" align="center" width="60px"></el-table-column>
+            <el-table-column prop="sum" label="总计" align="center" width="60px"></el-table-column>
           </el-table>
         </el-form-item>
         <el-form-item label="老师各科人数">
           <el-table
-            v-show="item.teachData"
-            v-model="item.teachData"
-            :data="item.teachData"
+            v-show="item.subjectTeacherNumber"
+            v-model="item.subjectTeacherNumber"
+            :data="item.subjectTeacherNumber"
             border
             size="mini"
             class="t-table"
             :header-cell-style="{background:'#eef1f6',color:'#606266'}"
           >
             <el-table-column prop="subject" label="科目" align="center" width="50px"></el-table-column>
-            <el-table-column prop="Chinese" label="语文" align="center" width="50px"></el-table-column>
+            <!--<el-table-column prop="Chinese" label="语文" align="center" width="50px"></el-table-column>
             <el-table-column prop="Math" label="数学" align="center" width="50px"></el-table-column>
-            <el-table-column prop="English" label="英语" align="center" width="50px"></el-table-column>
+            <el-table-column prop="English" label="英语" align="center" width="50px"></el-table-column>-->
             <el-table-column prop="Physics" label="物理" align="center" width="50px"></el-table-column>
             <el-table-column prop="Chemistry" label="化学" align="center" width="50px"></el-table-column>
             <el-table-column prop="Biology" label="生物" align="center" width="50px"></el-table-column>
@@ -62,15 +66,26 @@
         <el-form-item label="班级人数范围">
           <span>{{item.miniNums}} -- {{item.maxNums}}</span>
         </el-form-item>
+        <el-form-item label="任务运行时间">
+          <span>{{item.runingTime}}</span>
+        </el-form-item>
         <el-form-item label="任务状态">
           <span class="status">分班第一阶段:</span>
           <el-button type="primary" round size="mini" @click="oneStageBegin" v-show="showBegin">开始</el-button>
           <div v-show="!showBegin" class="showing">
             <span class="status">{{status}}</span>
-            <i class="el-icon-refresh-right status el-making"></i>
+            <i class="el-icon-refresh-right status el-making" v-show="!showSubGroupData"></i>
           </div>
         </el-form-item>
-        <el-form-item label>
+        <!--加载动画-->
+        <el-form-item v-show="showLoading">
+          <div class="spinner">
+            <div class="bounce1"></div>
+            <div class="bounce2"></div>
+            <div class="bounce3"></div>
+          </div>
+        </el-form-item>
+        <el-form-item label v-show="showSubGroupData">
           <div class="stage-one">
             <el-table
               v-model="subGroupData"
@@ -81,12 +96,12 @@
               :header-cell-style="{background:'#eef1f6',color:'#606266'}"
             >
               <el-table-column prop="subject" label="科目组合" align="center" width="80px"></el-table-column>
-              <el-table-column prop="GeoPol" label="地政" align="center" width="80px"></el-table-column>
-              <el-table-column prop="BioChe" label="生化" align="center" width="80px"></el-table-column>
-              <el-table-column prop="GeoBio" label="地生" align="center" width="80px"></el-table-column>
-              <el-table-column prop="PoiChe" label="政化" align="center" width="80px"></el-table-column>
-              <el-table-column prop="GeoChe" label="地化" align="center" width="80px"></el-table-column>
-              <el-table-column prop="PoiPhy" label="政生" align="center" width="80px"></el-table-column>
+              <el-table-column prop="生化" label="生化" align="center" width="80px"></el-table-column>
+              <el-table-column prop="地化" label="地化" align="center" width="80px"></el-table-column>
+              <el-table-column prop="地生" label="地生" align="center" width="80px"></el-table-column>
+              <el-table-column prop="政化" label="政化" align="center" width="80px"></el-table-column>
+              <el-table-column prop="政生" label="政生" align="center" width="80px"></el-table-column>
+              <el-table-column prop="地政" label="地政" align="center" width="80px"></el-table-column>
             </el-table>
             <div class="result-sty">第一阶段参考评分如下:</div>
             <el-table
@@ -97,11 +112,11 @@
               class="one-result-table"
               :header-cell-style="{background:'#eef1f6',color:'#606266'}"
             >
-              <el-table-column prop="group" label="分组" align="center" width="100px"></el-table-column>
-              <el-table-column prop="Geography" label="地理" align="center" width="100px"></el-table-column>
-              <el-table-column prop="Politics" label="政治" align="center" width="100px"></el-table-column>
-              <el-table-column prop="Biology" label="生物" align="center" width="100px"></el-table-column>
-              <el-table-column prop="Chemistry" label="化学" align="center" width="100px"></el-table-column>
+              <el-table-column prop="group" label="分组" align="center" width="150px"></el-table-column>
+              <el-table-column prop="4" label="地理" align="center" width="150px"></el-table-column>
+              <el-table-column prop="8" label="政治" align="center" width="150px"></el-table-column>
+              <el-table-column prop="16" label="生物" align="center" width="150px"></el-table-column>
+              <el-table-column prop="32" label="化学" align="center" width="150px"></el-table-column>
             </el-table>
           </div>
 
@@ -263,7 +278,13 @@
             </div>
           </div>
         </el-form-item>
-        <el-button type="warning" @click="toRuleTwoStage" class="next-btn" size="small">下一步</el-button>
+        <el-button
+          type="warning"
+          @click="toRuleTwoStage"
+          class="next-btn"
+          size="small"
+          v-show="showSubGroupData"
+        >下一步</el-button>
       </el-form>
     </template>
     <!--回到顶部-->
@@ -286,196 +307,33 @@ export default {
   props: {},
   data() {
     return {
-      showBegin: true,
-      showHook: false,
+      showSubGroupData: false, //是否显示科目组合人数表
+      showBegin: true, //是否开始第一阶段运行
+      showHook: true, //选择确认or修改
+      showLoading: false, //是否显示加载动画
       status: "进行中",
-      isModify: "确定",
+      isModify: "修改",
       formData: [],
-      oneResutltData: [
-        //第一阶段结果数据
-        {
-          group: "第一组",
-          Geography: "50.0/2",
-          Politics: "50.0/1",
-          Biology: "50.0/3",
-          Chemistry: "50.0/2"
-        },
-        {
-          group: "第二组",
-          Geography: "46.0/3",
-          Politics: "46.5/2",
-          Biology: "50.0/3",
-          Chemistry: "40.5/3"
-        },
-        {
-          group: "第三组",
-          Geography: "42.0/3",
-          Politics: "45.3/3",
-          Biology: "49.7/3",
-          Chemistry: "46.3/3"
-        },
-        {
-          group: "总计",
-          Geography: "8.0",
-          Politics: "6.0",
-          Biology: "9.0",
-          Chemistry: "7.0"
-        },
-        {
-          group: "差值",
-          Geography: "0.0",
-          Politics: "0.0",
-          Biology: "0.0",
-          Chemistry: "0.0"
-        }
-      ],
+      taskId: "",
+      isNameExit: false,
+      oneResutltData: [],
 
       subGroupData: [
         //第一阶段每个组合总人数
         {
           subject: "人数",
-          GeoPol: "101",
-          BioChe: "164",
-          GeoBio: "166",
-          PoiChe: "59",
-          GeoChe: "97",
-          PoiPhy: "119",
-          地政: "101",
-          生化: "164",
-          地生: "166",
-          政化: "59",
-          地化: "97",
-          政生: "119"
+          生化: "",
+          地化: "",
+          地生: "",
+          政化: "",
+          政生: "",
+          地政: ""
         }
       ],
-      firstGroup: [
-        //第一阶段第一组组合数据
-        {
-          comColumn: "地政",
-          numColumn: "21.0",
-          edit: false
-        },
-        {
-          comColumn: "生化",
-          numColumn: "71.0",
-          edit: false
-        },
-        {
-          comColumn: "地生",
-          numColumn: "79.0",
-          edit: false
-        },
-        {
-          comColumn: "政化",
-          numColumn: "29.0",
-          edit: false
-        }
-      ],
-      secondGroup: [
-        //第一阶段第二组组合数据
-        {
-          comColumn: "地生",
-          numColumn: "87.0",
-          edit: false
-        },
-        {
-          comColumn: "政化",
-          numColumn: "30.0",
-          edit: false
-        },
-        {
-          comColumn: "地化",
-          numColumn: "51.0",
-          edit: false
-        },
-        {
-          comColumn: "政生",
-          numColumn: "63.0",
-          edit: false
-        }
-      ],
-      thirtGroup: [
-        //第一阶段第三组组合数据
-        {
-          comColumn: "地化",
-          numColumn: "46.0",
-          edit: false
-        },
-        {
-          comColumn: "政生",
-          numColumn: "56.0",
-          edit: false
-        },
-        {
-          comColumn: "地政",
-          numColumn: "80.0",
-          edit: false
-        },
-        {
-          comColumn: "生化",
-          numColumn: "93.0",
-          edit: false
-        }
-      ],
-      twoPartData: [
-        //第一阶段数据
-        {
-          firstGroup: {
-            group: "地政",
-            rate: "14 / 7"
-          },
-          secondGroup: {
-            group: "地生",
-            rate: "8 / 79"
-          },
-          thirdGroup: {
-            group: "地化",
-            rate: "0 / 46"
-          }
-        },
-        {
-          firstGroup: {
-            group: "生化",
-            rate: "8 / 63"
-          },
-          secondGroup: {
-            group: "政化",
-            rate: "10 / 20"
-          },
-          thirdGroup: {
-            group: "政生",
-            rate: "0 / 56"
-          }
-        },
-        {
-          firstGroup: {
-            group: "地生",
-            rate: "25 / 54"
-          },
-          secondGroup: {
-            group: "地化",
-            rate: "12 / 39"
-          },
-          thirdGroup: {
-            group: "地政",
-            rate: "73 / 7"
-          }
-        },
-        {
-          firstGroup: {
-            group: "政化",
-            rate: "3 / 26"
-          },
-          secondGroup: {
-            group: "政生",
-            rate: "51 / 12"
-          },
-          thirdGroup: {
-            group: "生化",
-            rate: "2 / 91"
-          }
-        }
-      ]
+      firstGroup: [],
+      secondGroup: [],
+      thirtGroup: [],
+      runingTime: 0
     };
   },
   watch: {},
@@ -492,7 +350,7 @@ export default {
           if (key == "comColumn") {
             if (groupOneName[i]["comColumn"] == curCom) {
               groupOneName[i]["numColumn"] = (toalName - curNum).toFixed(1);
-              console.log(groupOneName[i]["numColumn"]);
+              // console.log(groupOneName[i]["numColumn"]);
             }
           }
         }
@@ -502,7 +360,7 @@ export default {
           if (key == "comColumn") {
             if (groupTwoName[i]["comColumn"] == curCom) {
               groupTwoName[i]["numColumn"] = (toalName - curNum).toFixed(1);
-              console.log(groupTwoName[i]["numColumn"]);
+              // console.log(groupTwoName[i]["numColumn"]);
             }
           }
         }
@@ -510,29 +368,33 @@ export default {
     },
     //修改第一阶段数据
     editData(row, column = null) {
-      console.log(row.edit);
+      let that = this;
+      // console.log(row.edit);
       row.edit = !row.edit;
       let pro;
       if (column != null) {
         pro = column.property;
       }
-      console.log(pro);
+
       let groupOneName, groupTwoName;
       let currentComColumn = row.comColumn; //当前所选组合名称
       let currentNumColumn = row.numColumn; //当前所选组合人数
-      let subGroupData = this.subGroupData; //所有组合
+      let subGroupData = that.subGroupData; //所有组合
       let groupTotaNum; //修改当前组合的人数总和
+
       for (let subGroup in subGroupData[0]) {
+        // console.log(subGroup);
         if (subGroup == currentComColumn) {
           groupTotaNum = subGroupData[0][subGroup];
         }
       }
+
       if (row.edit === false) {
         row.numColumn = parseInt(currentNumColumn).toFixed(1);
         if (pro == "firstGroup") {
-          groupOneName = this.secondGroup;
-          groupTwoName = this.thirtGroup;
-          this.ergodicGroup(
+          groupOneName = that.secondGroup;
+          groupTwoName = that.thirtGroup;
+          that.ergodicGroup(
             currentComColumn,
             currentNumColumn,
             groupTotaNum,
@@ -540,9 +402,9 @@ export default {
             groupTwoName
           );
         } else if (pro == "secondGroup") {
-          groupOneName = this.firstGroup;
-          groupTwoName = this.thirtGroup;
-          this.ergodicGroup(
+          groupOneName = that.firstGroup;
+          groupTwoName = that.thirtGroup;
+          that.ergodicGroup(
             currentComColumn,
             currentNumColumn,
             groupTotaNum,
@@ -550,9 +412,9 @@ export default {
             groupTwoName
           );
         } else {
-          groupOneName = this.firstGroup;
-          groupTwoName = this.secondGroup;
-          this.ergodicGroup(
+          groupOneName = that.firstGroup;
+          groupTwoName = that.secondGroup;
+          that.ergodicGroup(
             currentComColumn,
             currentNumColumn,
             groupTotaNum,
@@ -566,9 +428,169 @@ export default {
     handleChange(val) {
       // console.log(val);
     },
+    //计算评分表总计和差值
+    getTotalAndDiffData(scoreTable, minClassNumber) {
+      let that = this;
+      //去掉精确度
+      let arrTable = [];
+      for (let r in scoreTable) {
+        for (let t in scoreTable[r]) {
+          if (
+            typeof scoreTable[r][t] == "string" &&
+            scoreTable[r][t].includes("/") == true
+          ) {
+            //  console.log(res.data.scoreTable[r][t]);
+            arrTable = scoreTable[r][t].split("/");
+
+            for (let i = 0; i < arrTable.length; i++) {
+              arrTable[i] = Number(arrTable[i]).toFixed(2);
+            }
+            scoreTable[r][t] = arrTable.join("/");
+          }
+        }
+      }
+
+      //计算总计差值
+
+      let arr = [];
+      for (let i in scoreTable[3]) {
+        scoreTable[3][i] = Number(scoreTable[3][i]).toFixed(2);
+        arr.push(scoreTable[3][i]);
+      }
+
+      scoreTable[3]["group"] = "总计";
+      let dValue = [];
+      for (let j = 0; j < minClassNumber.length; j++) {
+        let temp = minClassNumber[j] - arr[j];
+
+        dValue.push(Number(temp).toFixed(2));
+      }
+      let dValueObj = {};
+      dValueObj["4"] = dValue[0];
+      dValueObj["8"] = dValue[1];
+      dValueObj["16"] = dValue[2];
+      dValueObj["32"] = dValue[3];
+      dValueObj["group"] = "差值";
+
+      scoreTable.push(dValueObj); //加入差值
+    },
     //分班第一阶段开始
     oneStageBegin() {
-      this.showBegin = false;
+      let that = this;
+      that.isShowPage = true;
+      that.showBegin = false;
+      that.showLoading = true;
+      if (that.showBegin == false) {
+        let StuData = that.formData[0].sectionStudentNumber[0];
+        // console.log(StuData);
+        let arrStudent = [];
+        let newArray = []; //存放组合的人数
+        let sum = 0;
+        for (var i in StuData) {
+          arrStudent.push(StuData[i]);
+        }
+        arrStudent.pop();
+        arrStudent.shift();
+        for (let k = 0; k < arrStudent.length; k += 2) {
+          sum = Number(arrStudent[k]) + Number(arrStudent[k + 1]);
+          newArray.push(sum);
+        }
+        that.subGroupData[0]["地政"] = newArray[0];
+        that.subGroupData[0]["地生"] = newArray[1];
+        that.subGroupData[0]["政生"] = newArray[2];
+        that.subGroupData[0]["地化"] = newArray[3];
+        that.subGroupData[0]["政化"] = newArray[4];
+        that.subGroupData[0]["生化"] = newArray[5];
+      }
+
+      that
+        .$axios({
+          url:
+            that.$root.URL +
+            "/runtask?taskId=" + //运行任务
+            that.taskId +
+            "&stage=1",
+          method: "post",
+          crossDomain: true
+        })
+        .then(function(res) {
+          if (res.status === 200) {
+            // if (that.runingTime <= 5 && that.runingTime >= 0) {
+
+            that.timer = setInterval(() => {
+              that
+                .$axios({
+                  url:
+                    that.$root.URL +
+                    "/result?distribution=0&stage=1&taskId=" + //定时获取任务结果
+                    that.taskId,
+                  method: "get",
+                  crossDomain: true
+                })
+                .then(function(res) {
+                  if (res.status === 200) {
+                    if (res.data != "") {
+                      clearInterval(that.timer);
+                      that.getTotalAndDiffData(
+                        res.data.scoreTable,
+                        res.data.minClassNumber
+                      );
+                      that.oneResutltData = res.data.scoreTable;
+                      that.firstGroup = res.data.resultData["第1组"];
+                      that.secondGroup = res.data.resultData["第2组"];
+                      that.thirtGroup = res.data.resultData["第3组"];
+                      that.showLoading = false;
+                      that.showSubGroupData = true;
+                      that.status = "完成";
+                    }
+                  }
+                })
+                .catch(function(error) {
+                  clearInterval(that.timer);
+                  if (error.response) {
+                    if (error.response.status === 404) {
+                      that.$router.push({
+                        path: "@/views/loginFailed", //跳转路径
+                        name: "loginFailed", //跳转路径的name值，不写跳转后页面取不到参数
+                        // 参数
+                        query: {
+                          error: "correct"
+                        }
+                      });
+                    }
+                  } else if (error.request) {
+                    that.$router.push({
+                      path: "@/views/loginFailed", //跳转路径
+                      name: "loginFailed", //跳转路径的name值，不写跳转后页面取不到参数
+                      // 参数
+                      query: {
+                        error: "error"
+                      }
+                    });
+                    console.log(error.request);
+                  } else {
+                    that.$router.push({
+                      path: "@/views/loginFailed", //跳转路径
+                      name: "loginFailed", //跳转路径的name值，不写跳转后页面取不到参数
+                      // 参数
+                      query: {
+                        error: "error"
+                      }
+                    });
+                    console.log("Error", error.message);
+                  }
+                  console.log(error.request);
+                });
+            }, 10000);
+
+            // } else {
+            //   clearInterval(that.timer);
+            // }
+          }
+        })
+        .catch(function(error) {
+          console.log(error);
+        });
     },
     //确认修改
     nextTwoPart() {
@@ -589,12 +611,343 @@ export default {
           name: "ruleTwoStage", //跳转路径的name值，不写跳转后页面取不到参数
           // 参数
           query: {
-            // form: that.form
+            taskId: that.taskId,
+            isNameExit: that.isNameExit,
+            formData: that.formData[0]
           }
         });
       } else {
         alert("请先点击确认修改按钮！");
       }
+    },
+    //任务已存在，获取结果
+    getTaskOneStageData(taskId) {
+      let that = this;
+      that
+        .$axios({
+          url: this.$root.URL + "/taskstatus?taskId=" + taskId,
+          method: "get",
+          crossDomain: true
+        })
+        .then(function(res) {
+          if (res.status === 200) {
+            for (let i in res.data.tasksStageMap) {
+              if (i == taskId) {
+                if (res.data.tasksStageMap[i] < 1) {
+                  that.isNameExit = false;
+                } else {
+                  that.isNameExit = true;
+                  that.showLoading = false;
+                  that.showSubGroupData = true;
+                  that.showBegin = false;
+                  that.status = "已完成";
+                  console.log(that.formData[0]);
+                  let StuData = that.formData[0].sectionStudentNumber[0];
+                  // console.log(StuData);
+                  let arrStudent = [];
+                  let newArray = []; //存放组合的人数
+                  let sum = 0;
+                  for (var i in StuData) {
+                    arrStudent.push(StuData[i]);
+                  }
+                  arrStudent.pop();
+                  arrStudent.shift();
+                  console.log(StuData);
+                  for (let k = 0; k < arrStudent.length; k += 2) {
+                    sum = Number(arrStudent[k]) + Number(arrStudent[k + 1]);
+                    newArray.push(sum);
+                  }
+                  that.subGroupData[0]["地政"] = newArray[0];
+                  that.subGroupData[0]["地生"] = newArray[1];
+                  that.subGroupData[0]["政生"] = newArray[2];
+                  that.subGroupData[0]["地化"] = newArray[3];
+                  that.subGroupData[0]["政化"] = newArray[4];
+                  that.subGroupData[0]["生化"] = newArray[5];
+                  that
+                    .$axios({
+                      url:
+                        that.$root.URL +
+                        "/result?stage=1&distribution=0&taskId=" + //定时获取任务结果
+                        that.taskId,
+                      method: "get",
+                      crossDomain: true
+                    })
+                    .then(function(res) {
+                      if (res.status === 200) {
+                        if (res.data != "") {
+                          that.getTotalAndDiffData(
+                            res.data.scoreTable,
+                            res.data.minClassNumber
+                          );
+                          // //去掉精确度
+
+                          // let arrTable = [];
+                          // for (let r in res.data.scoreTable) {
+                          //   for (let t in res.data.scoreTable[r]) {
+                          //     if (
+                          //       typeof res.data.scoreTable[r][t] == "string" &&
+                          //       res.data.scoreTable[r][t].includes("/") == true
+                          //     ) {
+                          //       //  console.log(res.data.scoreTable[r][t]);
+                          //       arrTable = res.data.scoreTable[r][t].split("/");
+
+                          //       for (let i = 0; i < arrTable.length; i++) {
+                          //         arrTable[i] = Number(arrTable[i]).toFixed(2);
+                          //       }
+                          //       res.data.scoreTable[r][t] = arrTable.join("/");
+                          //     }
+                          //   }
+                          // }
+
+                          // //计算总计差值
+
+                          // let arr = [];
+                          // for (let i in res.data.scoreTable[3]) {
+                          //   res.data.scoreTable[3][i] = Number(
+                          //     res.data.scoreTable[3][i]
+                          //   ).toFixed(2);
+                          //   arr.push(res.data.scoreTable[3][i]);
+                          // }
+
+                          // res.data.scoreTable[3]["group"] = "总计";
+                          // let dValue = [];
+                          // for (
+                          //   let j = 0;
+                          //   j < res.data.minClassNumber.length;
+                          //   j++
+                          // ) {
+                          //   let temp = res.data.minClassNumber[j] - arr[j];
+
+                          //   dValue.push(Number(temp).toFixed(2));
+                          // }
+                          // let dValueObj = {};
+                          // dValueObj["4"] = dValue[0];
+                          // dValueObj["8"] = dValue[1];
+                          // dValueObj["16"] = dValue[2];
+                          // dValueObj["32"] = dValue[3];
+                          // dValueObj["group"] = "差值";
+                          // that.oneResutltData.push(dValueObj); //加入差值
+
+                          that.oneResutltData = res.data.scoreTable;
+
+                          that.firstGroup = res.data.resultData["第1组"];
+                          that.secondGroup = res.data.resultData["第2组"];
+                          that.thirtGroup = res.data.resultData["第3组"];
+                        }
+                      }
+                    })
+                    .catch(function(error) {
+                      if (error.response) {
+                        if (error.response.status === 404) {
+                          that.$router.push({
+                            path: "@/views/loginFailed", //跳转路径
+                            name: "loginFailed", //跳转路径的name值，不写跳转后页面取不到参数
+                            // 参数
+                            query: {
+                              error: "correct"
+                            }
+                          });
+                        }
+                      } else if (error.request) {
+                        that.$router.push({
+                          path: "@/views/loginFailed", //跳转路径
+                          name: "loginFailed", //跳转路径的name值，不写跳转后页面取不到参数
+                          // 参数
+                          query: {
+                            error: "error"
+                          }
+                        });
+                        console.log(error.request);
+                      } else {
+                        that.$router.push({
+                          path: "@/views/loginFailed", //跳转路径
+                          name: "loginFailed", //跳转路径的name值，不写跳转后页面取不到参数
+                          // 参数
+                          query: {
+                            error: "error"
+                          }
+                        });
+                        console.log("Error", error.message);
+                      }
+                      console.log(error.request);
+                    });
+                }
+              }
+            }
+          }
+        })
+        .catch(function(error) {
+          if (error.response) {
+            if (error.response.status === 404) {
+              that.$router.push({
+                path: "@/views/loginFailed", //跳转路径
+                name: "loginFailed", //跳转路径的name值，不写跳转后页面取不到参数
+                // 参数
+                query: {
+                  error: "correct"
+                }
+              });
+            }
+          } else if (error.request) {
+            that.$router.push({
+              path: "@/views/loginFailed", //跳转路径
+              name: "loginFailed", //跳转路径的name值，不写跳转后页面取不到参数
+              // 参数
+              query: {
+                error: "error"
+              }
+            });
+            console.log(error.request);
+          } else {
+            that.$router.push({
+              path: "@/views/loginFailed", //跳转路径
+              name: "loginFailed", //跳转路径的name值，不写跳转后页面取不到参数
+              // 参数
+              query: {
+                error: "error"
+              }
+            });
+            console.log("Error", error.message);
+          }
+          console.log(error.request);
+        });
+      // if (taskId != undefined) {
+      //   that.isNameExit = true;
+      //   let StuData = that.formData[0].sectionStudentNumber[0];
+      //   // console.log(StuData);
+      //   let arrStudent = [];
+      //   let newArray = []; //存放组合的人数
+      //   let sum = 0;
+      //   for (var i in StuData) {
+      //     arrStudent.push(StuData[i]);
+      //   }
+      //   arrStudent.pop();
+      //   arrStudent.shift();
+      //   for (let k = 0; k < arrStudent.length; k += 2) {
+      //     sum = Number(arrStudent[k]) + Number(arrStudent[k + 1]);
+      //     newArray.push(sum);
+      //   }
+      //   that.subGroupData[0]["生化"] = newArray[0];
+      //   that.subGroupData[0]["地化"] = newArray[1];
+      //   that.subGroupData[0]["地生"] = newArray[2];
+      //   that.subGroupData[0]["政化"] = newArray[3];
+      //   that.subGroupData[0]["政生"] = newArray[4];
+      //   that.subGroupData[0]["地政"] = newArray[5];
+
+      //   that.showBegin = false;
+      //   that.showSubGroupData = true;
+      //   that
+      //     .$axios({
+      //       url: that.$root.URL + "/result?stage=1&taskId=" + taskId,
+      //       method: "get",
+      //       crossDomain: true
+      //     })
+      //     .then(function(res) {
+      //       if (res.status === 200) {
+      //         if (res.data != "") {
+      //           clearInterval(that.timer);
+      //           that.oneResutltData = res.data.scoreTable;
+      //           // console.log(res.data);
+      //           that.firstGroup = res.data.resultData["第1组"];
+      //           that.secondGroup = res.data.resultData["第2组"];
+      //           that.thirtGroup = res.data.resultData["第3组"];
+      //           that.showLoading = false;
+      //           that.showSubGroupData = true;
+      //           that.status = "完成";
+      //         }
+      //       }
+      //     })
+      //     .catch(function(error) {
+      //       clearInterval(that.timer);
+      //       if (error.response) {
+      //         if (error.response.status === 404) {
+      //           that.$router.push({
+      //             path: "@/views/loginFailed", //跳转路径
+      //             name: "loginFailed", //跳转路径的name值，不写跳转后页面取不到参数
+      //             // 参数
+      //             query: {
+      //               error: "correct"
+      //             }
+      //           });
+      //         }
+      //       } else if (error.request) {
+      //         that.$router.push({
+      //           path: "@/views/loginFailed", //跳转路径
+      //           name: "loginFailed", //跳转路径的name值，不写跳转后页面取不到参数
+      //           // 参数
+      //           query: {
+      //             error: "error"
+      //           }
+      //         });
+      //         console.log(error.request);
+      //       } else {
+      //         that.$router.push({
+      //           path: "@/views/loginFailed", //跳转路径
+      //           name: "loginFailed", //跳转路径的name值，不写跳转后页面取不到参数
+      //           // 参数
+      //           query: {
+      //             error: "error"
+      //           }
+      //         });
+      //         console.log("Error", error.message);
+      //       }
+      //       console.log(error.request);
+      //     });
+      // }
+    },
+    //获取任务规则
+    getTaskRule(taskId) {
+      let that = this;
+      that
+        .$axios({
+          url:
+            that.$root.URL +
+            "/rule?taskId=" + //定时获取任务结果
+            taskId,
+          method: "get",
+          crossDomain: true
+        })
+        .then(function(res) {
+          if (res.status === 200) {
+            console.log(res.data);
+            // that.formData.push(res.data.rule);
+          }
+        })
+        .catch(function(error) {
+          if (error.response) {
+            if (error.response.status === 404) {
+              that.$router.push({
+                path: "@/views/loginFailed", //跳转路径
+                name: "loginFailed", //跳转路径的name值，不写跳转后页面取不到参数
+                // 参数
+                query: {
+                  error: "correct"
+                }
+              });
+            }
+          } else if (error.request) {
+            that.$router.push({
+              path: "@/views/loginFailed", //跳转路径
+              name: "loginFailed", //跳转路径的name值，不写跳转后页面取不到参数
+              // 参数
+              query: {
+                error: "error"
+              }
+            });
+            console.log(error.request);
+          } else {
+            that.$router.push({
+              path: "@/views/loginFailed", //跳转路径
+              name: "loginFailed", //跳转路径的name值，不写跳转后页面取不到参数
+              // 参数
+              query: {
+                error: "error"
+              }
+            });
+            console.log("Error", error.message);
+          }
+          console.log(error.request);
+        });
     }
   },
   created() {
@@ -602,13 +955,53 @@ export default {
   },
   mounted() {
     let that = this;
-    let params = that.$route.query;
-    if (params.form.taskName) {
-      let that = this;
-      let lists = that.$store.state.taskLists;
-      that.formData = lists;
+    if (that.$route.query) {
+      if (that.$route.query.form === "[object Object]") {
+      } else {
+        let paramsData = that.$route.query;
+        that.taskId = paramsData.taskId;
+
+        that.formData.push(paramsData.form);
+        that.formData[0]["taskName"] = paramsData.taskId;
+
+        that.runingTime = paramsData.form.runingTime;
+        
+      }
     }
-  }
+
+    if (that.$route.params.form) {
+      let params = that.$route.params.form;
+      that.formData.push(params);
+      
+
+      that.taskId = that.$route.params.taskId;
+      that.getTaskRule(that.taskId);
+      
+      // that.getTaskOneStageData(that.taskId);
+    }
+
+    
+    if (that.taskId != undefined || that.taskId != "") {
+      //若存在该任务，填上数据
+      that.getTaskOneStageData(that.taskId);
+    }
+
+    // let backTaskId = that.$route.params.taskId;//历史back回去的id
+    // if(backTaskId){
+    //   console.log(backTaskId);
+    // }
+  },
+  beforeDestroy() {
+    clearInterval(this.timer);
+  },
+  beforeRouteLeave(to, from, next) {
+    //路由离开前返回上一页状态
+    let that = this;
+    to.params.taskId = that.taskId;
+    to.params.formData = that.formData;
+    next();
+  },
+  destroyed: function() {}
 };
 </script>
 <style scoped>
@@ -631,11 +1024,11 @@ export default {
   margin-bottom: 0;
 }
 .s-table {
-  width: 501px;
+  width: 841px;
   margin-top: 10px;
 }
 .t-table {
-  width: 501px;
+  width: 351px;
   margin-top: 10px;
 }
 .status {
@@ -667,7 +1060,7 @@ export default {
   margin-top: 40px;
 }
 .one-result-table {
-  width: 501px;
+  width: 751px;
   margin-top: 10px;
 }
 .result-sty {
@@ -714,5 +1107,56 @@ export default {
   text-align: center;
   line-height: 40px;
   color: #1989fa;
+}
+/**加载动画**/
+.spinner {
+  margin: 100px auto 0;
+  width: 500px;
+  text-align: center;
+}
+.spinner > div {
+  width: 30px;
+  height: 30px;
+  background-color: #409eff;
+  border-radius: 100%;
+  display: inline-block;
+  -webkit-animation: bouncedelay 1.4s infinite ease-in-out;
+  animation: bouncedelay 1.4s infinite ease-in-out;
+  /* Prevent first frame from flickering when animation starts */
+
+  -webkit-animation-fill-mode: both;
+  animation-fill-mode: both;
+}
+.spinner .bounce1 {
+  -webkit-animation-delay: -0.32s;
+  animation-delay: -0.32s;
+  margin-right: 80px;
+}
+.spinner .bounce2 {
+  -webkit-animation-delay: -0.16s;
+  animation-delay: -0.16s;
+  margin-right: 80px;
+}
+@-webkit-keyframes bouncedelay {
+  0%,
+  80%,
+  100% {
+    -webkit-transform: scale(0);
+  }
+  40% {
+    -webkit-transform: scale(1);
+  }
+}
+@keyframes bouncedelay {
+  0%,
+  80%,
+  100% {
+    transform: scale(0);
+    -webkit-transform: scale(0);
+  }
+  40% {
+    transform: scale(1);
+    -webkit-transform: scale(1);
+  }
 }
 </style>

@@ -2,8 +2,8 @@
   <div class="s-main">
     <div>
       <div class="s-head">
-        <span class="s-word">周次：</span>
-        <span>第</span>
+        <span class="s-word">班级：</span>
+        <!--<span>第</span>-->
         <el-select v-model="value" placeholder="请选择" class="select-num">
           <el-option
             v-for="item in options"
@@ -12,7 +12,7 @@
             :value="item.value"
           ></el-option>
         </el-select>
-        <span>周</span>
+        <!--<span>周</span>-->
 
         <span class="s-word space-word">学期：</span>
         <el-select v-model="tvalue" placeholder="请选择" class="select-term">
@@ -60,7 +60,7 @@
 <script>
 import $ from "jquery";
 import printButton from "@/components/PrintButton";
-import exportExcel from "@/components/ExportExcel"
+import exportExcel from "@/components/ExportExcel";
 export default {
   components: {
     printButton,
@@ -69,10 +69,9 @@ export default {
   props: {},
   data() {
     return {
-      sTable:"sTable",
-      nameMsg:"sTable",
+      sTable: "sTable",
+      nameMsg: "sTable",
       courseData: [
-        
         {
           time: "7:30~8:30",
           monday: "语文(102教室)",
@@ -172,36 +171,36 @@ export default {
           label: "全部"
         },
         {
-          value: "1",
-          label: "1"
+          value: "行政班1",
+          label: "行政班11"
         },
         {
-          value: "2",
-          label: "2"
+          value: "行政班12",
+          label: "行政班12"
         },
         {
-          value: "3",
-          label: "3"
+          value: "行政班13",
+          label: "行政班13"
         },
         {
-          value: "4",
-          label: "4"
+          value: "行政班14",
+          label: "行政班14"
         },
         {
-          value: "5",
-          label: "5"
+          value: "行政班15",
+          label: "行政班15"
         },
         {
-          value: "6",
-          label: "6"
+          value: "行政班16",
+          label: "行政班16"
         },
         {
-          value: "7",
-          label: "7"
+          value: "行政班17",
+          label: "行政班17"
         },
         {
-          value: "8",
-          label: "8"
+          value: "行政班18",
+          label: "行政班18"
         },
         {
           value: "9",
@@ -273,8 +272,7 @@ export default {
           tlabel: "4",
           tvalue: "高三第一学期"
         }
-      ],
-      
+      ]
     };
   },
   watch: {
@@ -292,10 +290,78 @@ export default {
       console.log(this.value);
       console.log(this.tvalue);
     },
-    
+    //获取数据
+    getClassTableData() {
+      that
+        .$axios({
+          url:
+            that.$root.URL +
+            "/result?taskId=" + //运行任务
+            taskId +
+            "&stage=5&distribution=0",
+          method: "get",
+          crossDomain: true
+        })
+        .then(function(res) {
+          if (res.status === 200) {
+            clearInterval(that.timer);
+            let data = res.data;
+            let objData = {};
+            for (let i in data) {
+              objData["class"] = i;
+              objData["classNumber"] = data[i]["sum"];
+              that.adminClassData.push(objData);
+              objData = {};
+            }
+            if (that.adminClassData) {
+              that.showLoading = false;
+            }
+          }
+        })
+        .catch(function(error) {
+          clearInterval(that.timer);
+          if (error.response) {
+            if (error.response.status === 404) {
+              that.$router.push({
+                path: "@/views/loginFailed", //跳转路径
+                name: "loginFailed", //跳转路径的name值，不写跳转后页面取不到参数
+                // 参数
+                query: {
+                  error: "correct"
+                }
+              });
+            }
+          } else if (error.request) {
+            that.$router.push({
+              path: "@/views/loginFailed", //跳转路径
+              name: "loginFailed", //跳转路径的name值，不写跳转后页面取不到参数
+              // 参数
+              query: {
+                error: "error"
+              }
+            });
+            console.log(error.request);
+          } else {
+            that.$router.push({
+              path: "@/views/loginFailed", //跳转路径
+              name: "loginFailed", //跳转路径的name值，不写跳转后页面取不到参数
+              // 参数
+              query: {
+                error: "error"
+              }
+            });
+            console.log("Error", error.message);
+          }
+          console.log(error.request);
+        });
+    }
   },
   created() {},
-  mounted() {}
+  mounted() {
+    //获取数据
+    //let that = this;
+    //that.getClassTableData();
+  }
 };
 </script>
 <style scoped>
@@ -312,7 +378,7 @@ export default {
   margin: 0 auto;
 }
 .select-num {
-  width: 100px;
+  width: 150px;
 }
 .select-term {
   width: 160px;

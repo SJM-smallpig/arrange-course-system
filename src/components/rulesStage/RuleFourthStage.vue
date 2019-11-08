@@ -5,37 +5,25 @@
       <span class="status">分班第四阶段:</span>
       <div class="showing">
         <span class="status">{{status}}</span>
-        <i class="el-icon-refresh-right status el-making"></i>
+        <i class="el-icon-refresh-right status el-making" v-show="!isShowFourStageData"></i>
       </div>
     </div>
-    <el-collapse v-model="activeNames" @change="handleChange">
-      <template v-for="item in tableData">
-        <el-collapse-item title="评分参考" name="1" :key="item.index">
-          <el-table
-            v-model="item.threeStageScoreData"
-            :data="item.threeStageScoreData"
-            border
-            stripe
-            size="mini"
-            class="four-score-table"
-            :header-cell-style="{background:'#eef1f6',color:'#606266'}"
-          >
-            <el-table-column prop="group" label="分组" align="center" width="100px"></el-table-column>
-            <el-table-column prop="历" label="历史" align="center" width="100px"></el-table-column>
-            <el-table-column prop="物" label="物理" align="center" width="100px"></el-table-column>
-            <el-table-column prop="地" label="地理" align="center" width="100px"></el-table-column>
-            <el-table-column prop="政" label="政治" align="center" width="100px"></el-table-column>
-            <el-table-column prop="生" label="生物" align="center" width="100px"></el-table-column>
-            <el-table-column prop="化" label="化学" align="center" width="100px"></el-table-column>
-            <el-table-column prop="混合" label="是否历物混合" align="center" width="100px"></el-table-column>
-          </el-table>
-        </el-collapse-item>
+     <!--加载动画-->
+    <div v-show="showLoading">
+      <div class="spinner">
+        <div class="bounce1"></div>
+        <div class="bounce2"></div>
+        <div class="bounce3"></div>
+      </div>
+    </div>
+    <el-collapse v-model="activeNames" @change="handleChange" v-show="isShowFourStageData">
+      <!--<template v-for="item in tableData"> -->
         <el-collapse-item
-          v-for="data in item.tableClassData"
+          v-for="data in teachClassData"
           :key="data.index"
           :title="data.title"
           :name="data.name"
-          v-model="item.tableClassData"
+          v-model="teachClassData"
         >
           <div>
             <el-button
@@ -56,158 +44,158 @@
             size="mini"
             :header-cell-style="{background:'#eef1f6',color:'#606266'}"
           >
-            <el-table-column prop="group" label="组" width="80" align="center"></el-table-column>
+            <el-table-column prop="group" :label="data.title" width="100" align="center"></el-table-column>
 
-            <el-table-column prop="hgp" label="历地政" width="80" align="center">
+            <el-table-column prop="c13" label="历地政" width="80" align="center">
               <template slot-scope="scope">
                 <div class="show-last-item">
-                  <i v-if="scope.row.hgp!=''" class="el-icon-remove-outline icon"></i>
-                  <span class="row-num">{{scope.row.hgp}}</span>
+                  <i v-if="scope.row.c13!=''" class="el-icon-remove-outline icon"></i>
+                  <span class="row-num">{{scope.row.c13}}</span>
                   <i
-                    v-if="scope.row.hgp!=''"
+                    v-if="scope.row.c13!=''"
                     class="el-icon-circle-plus-outline icon"
                     @click="addData(scope.row)"
                   ></i>
                 </div>
               </template>
             </el-table-column>
-            <el-table-column prop="hgb" label="历地生" width="80" align="center">
+            <el-table-column prop="c21" label="历地生" width="80" align="center">
               <template slot-scope="scope">
                 <div class="show-last-item">
-                  <i v-if="scope.row.hgb!=''" class="el-icon-remove-outline icon"></i>
-                  <span class="row-num">{{scope.row.hgb}}</span>
+                  <i v-if="scope.row.c21!=''" class="el-icon-remove-outline icon"></i>
+                  <span class="row-num">{{scope.row.c21}}</span>
                   <i
-                    v-if="scope.row.hgb!=''"
+                    v-if="scope.row.c21!=''"
                     class="el-icon-circle-plus-outline icon"
                     @click="addData(scope.row)"
                   ></i>
                 </div>
               </template>
             </el-table-column>
-            <el-table-column prop="hgs" label="历地化" width="80" align="center">
+            <el-table-column prop="c37" label="历地化" width="80" align="center">
               <template slot-scope="scope">
                 <div class="show-last-item">
-                  <i v-if="scope.row.hgs!=''" class="el-icon-remove-outline icon"></i>
-                  <span class="row-num">{{scope.row.hgs}}</span>
+                  <i v-if="scope.row.c37!=''" class="el-icon-remove-outline icon"></i>
+                  <span class="row-num">{{scope.row.c37}}</span>
                   <i
-                    v-if="scope.row.hgs!=''"
+                    v-if="scope.row.c37!=''"
                     class="el-icon-circle-plus-outline icon"
                     @click="addData(scope.row)"
                   ></i>
                 </div>
               </template>
             </el-table-column>
-            <el-table-column prop="hpb" label="历政生" width="80" align="center">
+            <el-table-column prop="c25" label="历政生" width="80" align="center">
               <template slot-scope="scope">
                 <div class="show-last-item">
-                  <i v-if="scope.row.hpb!=''" class="el-icon-remove-outline icon"></i>
-                  <span class="row-num">{{scope.row.hpb}}</span>
+                  <i v-if="scope.row.c25!=''" class="el-icon-remove-outline icon"></i>
+                  <span class="row-num">{{scope.row.c25}}</span>
                   <i
-                    v-if="scope.row.hpb!=''"
+                    v-if="scope.row.c25!=''"
                     class="el-icon-circle-plus-outline icon"
                     @click="addData(scope.row)"
                   ></i>
                 </div>
               </template>
             </el-table-column>
-            <el-table-column prop="hps" label="历政化" width="80" align="center">
+            <el-table-column prop="c41" label="历政化" width="80" align="center">
               <template slot-scope="scope">
                 <div class="show-last-item">
-                  <i v-if="scope.row.hps!=''" class="el-icon-remove-outline icon"></i>
-                  <span class="row-num">{{scope.row.hps}}</span>
+                  <i v-if="scope.row.c41!=''" class="el-icon-remove-outline icon"></i>
+                  <span class="row-num">{{scope.row.c41}}</span>
                   <i
-                    v-if="scope.row.hps!=''"
+                    v-if="scope.row.c41!=''"
                     class="el-icon-circle-plus-outline icon"
                     @click="addData(scope.row)"
                   ></i>
                 </div>
               </template>
             </el-table-column>
-            <el-table-column prop="hbs" label="历生化" width="80" align="center">
+            <el-table-column prop="c49" label="历生化" width="80" align="center">
               <template slot-scope="scope">
                 <div class="show-last-item">
-                  <i v-if="scope.row.hbs!=''" class="el-icon-remove-outline icon"></i>
-                  <span class="row-num">{{scope.row.hbs}}</span>
+                  <i v-if="scope.row.c49!=''" class="el-icon-remove-outline icon"></i>
+                  <span class="row-num">{{scope.row.c49}}</span>
                   <i
-                    v-if="scope.row.hbs!=''"
+                    v-if="scope.row.c49!=''"
                     class="el-icon-circle-plus-outline icon"
                     @click="addData(scope.row)"
                   ></i>
                 </div>
               </template>
             </el-table-column>
-            <el-table-column prop="pgp" label="物地政" width="80" align="center">
+            <el-table-column prop="c14" label="物地政" width="80" align="center">
               <template slot-scope="scope">
                 <div class="show-last-item">
-                  <i v-if="scope.row.pgp!=''" class="el-icon-remove-outline icon"></i>
-                  <span class="row-num">{{scope.row.pgp}}</span>
+                  <i v-if="scope.row.c14!=''" class="el-icon-remove-outline icon"></i>
+                  <span class="row-num">{{scope.row.c14}}</span>
                   <i
-                    v-if="scope.row.pgp!=''"
+                    v-if="scope.row.c14!=''"
                     class="el-icon-circle-plus-outline icon"
                     @click="addData(scope.row)"
                   ></i>
                 </div>
               </template>
             </el-table-column>
-            <el-table-column prop="pgb" label="物地生" width="80" align="center">
+            <el-table-column prop="c22" label="物地生" width="80" align="center">
               <template slot-scope="scope">
                 <div class="show-last-item">
-                  <i v-if="scope.row.pgb!=''" class="el-icon-remove-outline icon"></i>
-                  <span class="row-num">{{scope.row.pgb}}</span>
+                  <i v-if="scope.row.c22!=''" class="el-icon-remove-outline icon"></i>
+                  <span class="row-num">{{scope.row.c22}}</span>
                   <i
-                    v-if="scope.row.pgb!=''"
+                    v-if="scope.row.c22!=''"
                     class="el-icon-circle-plus-outline icon"
                     @click="addData(scope.row)"
                   ></i>
                 </div>
               </template>
             </el-table-column>
-            <el-table-column prop="pgs" label="物地化" width="80" align="center">
+            <el-table-column prop="c38" label="物地化" width="80" align="center">
               <template slot-scope="scope">
                 <div class="show-last-item">
-                  <i v-if="scope.row.pgs!=''" class="el-icon-remove-outline icon"></i>
-                  <span class="row-num">{{scope.row.pgs}}</span>
+                  <i v-if="scope.row.c38!=''" class="el-icon-remove-outline icon"></i>
+                  <span class="row-num">{{scope.row.c38}}</span>
                   <i
-                    v-if="scope.row.pgs!=''"
+                    v-if="scope.row.c38!=''"
                     class="el-icon-circle-plus-outline icon"
                     @click="addData(scope.row)"
                   ></i>
                 </div>
               </template>
             </el-table-column>
-            <el-table-column prop="ppb" label="物政生" width="80" align="center">
+            <el-table-column prop="c26" label="物政生" width="80" align="center">
               <template slot-scope="scope">
                 <div class="show-last-item">
-                  <i v-if="scope.row.ppb!=''" class="el-icon-remove-outline icon"></i>
-                  <span class="row-num">{{scope.row.ppb}}</span>
+                  <i v-if="scope.row.c26!=''" class="el-icon-remove-outline icon"></i>
+                  <span class="row-num">{{scope.row.c26}}</span>
                   <i
-                    v-if="scope.row.ppb!=''"
+                    v-if="scope.row.c26!=''"
                     class="el-icon-circle-plus-outline icon"
                     @click="addData(scope.row)"
                   ></i>
                 </div>
               </template>
             </el-table-column>
-            <el-table-column prop="pps" label="物政化" width="80" align="center">
+            <el-table-column prop="c42" label="物政化" width="80" align="center">
               <template slot-scope="scope">
                 <div class="show-last-item">
-                  <i v-if="scope.row.pps!=''" class="el-icon-remove-outline icon"></i>
-                  <span class="row-num">{{scope.row.pps}}</span>
+                  <i v-if="scope.row.c42!=''" class="el-icon-remove-outline icon"></i>
+                  <span class="row-num">{{scope.row.c42}}</span>
                   <i
-                    v-if="scope.row.pps!=''"
+                    v-if="scope.row.c42!=''"
                     class="el-icon-circle-plus-outline icon"
                     @click="addData(scope.row)"
                   ></i>
                 </div>
               </template>
             </el-table-column>
-            <el-table-column prop="pbs" label="物生化" width="80" align="center">
+            <el-table-column prop="c50" label="物生化" width="80" align="center">
               <template slot-scope="scope">
                 <div class="show-last-item">
-                  <i v-if="scope.row.pbs!=''" class="el-icon-remove-outline icon"></i>
-                  <span class="row-num">{{scope.row.pbs}}</span>
+                  <i v-if="scope.row.c50!=''" class="el-icon-remove-outline icon"></i>
+                  <span class="row-num">{{scope.row.c50}}</span>
                   <i
-                    v-if="scope.row.pbs!=''"
+                    v-if="scope.row.c50!=''"
                     class="el-icon-circle-plus-outline icon"
                     @click="addData(scope.row)"
                   ></i>
@@ -216,9 +204,9 @@
             </el-table-column>
           </el-table>
         </el-collapse-item>
-      </template>
+     <!-- </template>-->
     </el-collapse>
-    <el-button type="warning" @click="toRuleFourthStage" class="next-btn" size="small">下一步</el-button>
+    <el-button type="warning" @click="toRuleFourthStage" v-show="isShowFourStageData" class="next-btn" size="small">下一步</el-button>
 
     <div class="all-collapse" @click="getAllCollapse">
       <span class="row-num">全部折叠</span>
@@ -232,34 +220,7 @@
         </div>
       </el-backtop>
     </template>
-    <!--弹出评分表-->
-    <el-popover ref="popover4" placement="right" width="697" trigger="hover">
-      <template v-for="item in tableData">
-        <el-table
-          v-model="item.threeStageScoreData"
-          :data="item.threeStageScoreData"
-          :key="item.index"
-          border
-          stripe
-          size="mini"
-          class="four-score-table"
-          :header-cell-style="{background:'#eef1f6',color:'#606266'}"
-        >
-          <el-table-column prop="group" label="分组" align="center" width="85px"></el-table-column>
-          <el-table-column prop="历" label="历史" align="center" width="85px"></el-table-column>
-          <el-table-column prop="物" label="物理" align="center" width="85px"></el-table-column>
-          <el-table-column prop="地" label="地理" align="center" width="85px"></el-table-column>
-          <el-table-column prop="政" label="政治" align="center" width="85px"></el-table-column>
-          <el-table-column prop="生" label="生物" align="center" width="85px"></el-table-column>
-          <el-table-column prop="化" label="化学" align="center" width="85px"></el-table-column>
-          <el-table-column prop="混合" label="是否历物混合" align="center" width="100px"></el-table-column>
-        </el-table>
-      </template>
-    </el-popover>
-
-    <el-button class="show-data" v-popover:popover4>
-      <span>评分结果</span>
-    </el-button>
+    
   </div>
 </template>
 
@@ -270,680 +231,16 @@ export default {
   props: {},
   data() {
     return {
+      isNameExit:false,
       isModify: "修改",
+      isShowFourStageData:false,
+      showLoading:true,
       tableLastItem: true,
       status: "进行中",
       activeNames: [],
-      tableData: [
-        {
-          threeStageScoreData: [
-            {
-              group: "0",
-              历: "67/2/33.50",
-              物: "66/2/33.00",
-              地: "86/2/43.00",
-              政: "83/2/41.50",
-              生: "50/1/50.00",
-              化: "47/1/47.00",
-              混合: "0"
-            },
-            {
-              group: "0",
-              历: "67/2/33.50",
-              物: "66/2/33.00",
-              地: "86/2/43.00",
-              政: "83/2/41.50",
-              生: "50/1/50.00",
-              化: "47/1/47.00",
-              混合: "0"
-            },
-            {
-              group: "0",
-              历: "67/2/33.50",
-              物: "66/2/33.00",
-              地: "86/2/43.00",
-              政: "83/2/41.50",
-              生: "50/1/50.00",
-              化: "47/1/47.00",
-              混合: "0"
-            },
-            {
-              group: "总计",
-              历: "5.0",
-              物: "11.0",
-              地: "8.0",
-              政: "6.0",
-              生: "9.0",
-              化: "7.0",
-              混合: "/"
-            },
-            {
-              group: "差值",
-              历: "0.0",
-              物: "-1.0",
-              地: "0.0",
-              政: "0.0",
-              生: "0.0",
-              化: "0.0",
-              混合: "/"
-            }
-          ],
-          tableClassData: [
-            {
-              title: "教学班一",
-              name: "2",
-              Group: [
-                {
-                  group: "历史",
-                  hgp: "0~12",
-                  hgb: "0~18",
-                  hgs: "",
-                  hpb: "",
-                  hps: "0~6",
-                  hbs: "0~4",
-                  pgp: "",
-                  pgb: "",
-                  pgs: "",
-                  ppb: "",
-                  pps: "",
-                  pbs: ""
-                },
-                {
-                  group: "物理",
-                  hgp: "",
-                  hgb: "",
-                  hgs: "",
-                  hpb: "",
-                  hps: "",
-                  hbs: "",
-                  pgp: "",
-                  pgb: "0~5",
-                  pgs: "",
-                  ppb: "",
-                  pps: "0~17",
-                  pbs: ""
-                },
-                {
-                  group: "地理",
-                  hgp: "0~12",
-                  hgb: "0~18",
-                  hgs: "",
-                  hpb: "",
-                  hps: "",
-                  hbs: "",
-                  pgp: "0~5",
-                  pgb: "",
-                  pgs: "",
-                  ppb: "",
-                  pps: "",
-                  pbs: ""
-                },
-                {
-                  group: "政治",
-                  hgp: "0~12",
-                  hgb: "",
-                  hgs: "",
-                  hpb: "",
-                  hps: "0~6",
-                  hbs: "",
-                  pgp: "",
-                  pgb: "",
-                  pgs: "",
-                  ppb: "",
-                  pps: "",
-                  pbs: ""
-                },
-                {
-                  group: "生物",
-                  hgp: "",
-                  hgb: "0~18",
-                  hgs: "",
-                  hpb: "",
-                  hps: "",
-                  hbs: "0~4",
-                  pgp: "",
-                  pgb: "",
-                  pgs: "",
-                  ppb: "",
-                  pps: "",
-                  pbs: ""
-                },
-                {
-                  group: "化学",
-                  hgp: "",
-                  hgb: "0~18",
-                  hgs: "",
-                  hpb: "",
-                  hps: "",
-                  hbs: "0~4",
-                  pgp: "",
-                  pgb: "",
-                  pgs: "",
-                  ppb: "",
-                  pps: "",
-                  pbs: ""
-                },
-                {
-                  group: "语文",
-                  hgp: "",
-                  hgb: "0~18",
-                  hgs: "",
-                  hpb: "",
-                  hps: "",
-                  hbs: "0~4",
-                  pgp: "",
-                  pgb: "",
-                  pgs: "",
-                  ppb: "",
-                  pps: "",
-                  pbs: ""
-                },
-                {
-                  group: "语文",
-                  hgp: "",
-                  hgb: "0~18",
-                  hgs: "",
-                  hpb: "",
-                  hps: "",
-                  hbs: "0~4",
-                  pgp: "",
-                  pgb: "",
-                  pgs: "",
-                  ppb: "",
-                  pps: "",
-                  pbs: ""
-                },
-                {
-                  group: "数学",
-                  hgp: "",
-                  hgb: "0~18",
-                  hgs: "",
-                  hpb: "",
-                  hps: "",
-                  hbs: "0~4",
-                  pgp: "",
-                  pgb: "",
-                  pgs: "",
-                  ppb: "",
-                  pps: "",
-                  pbs: ""
-                },
-                {
-                  group: "数学",
-                  hgp: "",
-                  hgb: "0~18",
-                  hgs: "",
-                  hpb: "",
-                  hps: "",
-                  hbs: "0~4",
-                  pgp: "",
-                  pgb: "",
-                  pgs: "",
-                  ppb: "",
-                  pps: "",
-                  pbs: ""
-                },
-                {
-                  group: "英语",
-                  hgp: "",
-                  hgb: "0~18",
-                  hgs: "",
-                  hpb: "",
-                  hps: "",
-                  hbs: "0~4",
-                  pgp: "",
-                  pgb: "",
-                  pgs: "",
-                  ppb: "",
-                  pps: "",
-                  pbs: ""
-                },
-                {
-                  group: "英语",
-                  hgp: "",
-                  hgb: "0~18",
-                  hgs: "",
-                  hpb: "",
-                  hps: "",
-                  hbs: "0~4",
-                  pgp: "",
-                  pgb: "",
-                  pgs: "",
-                  ppb: "",
-                  pps: "",
-                  pbs: ""
-                },
-                {
-                  group: "体育",
-                  hgp: "",
-                  hgb: "0~18",
-                  hgs: "",
-                  hpb: "",
-                  hps: "",
-                  hbs: "0~4",
-                  pgp: "",
-                  pgb: "",
-                  pgs: "",
-                  ppb: "",
-                  pps: "",
-                  pbs: ""
-                },
-                {
-                  group: "体育",
-                  hgp: "",
-                  hgb: "0~18",
-                  hgs: "",
-                  hpb: "",
-                  hps: "",
-                  hbs: "0~4",
-                  pgp: "",
-                  pgb: "",
-                  pgs: "",
-                  ppb: "",
-                  pps: "",
-                  pbs: ""
-                },
-                {
-                  group: "信息与技术",
-                  hgp: "",
-                  hgb: "0~18",
-                  hgs: "",
-                  hpb: "",
-                  hps: "",
-                  hbs: "0~4",
-                  pgp: "",
-                  pgb: "",
-                  pgs: "",
-                  ppb: "",
-                  pps: "",
-                  pbs: ""
-                },
-                {
-                  group: "信息与技术",
-                  hgp: "",
-                  hgb: "0~18",
-                  hgs: "",
-                  hpb: "",
-                  hps: "",
-                  hbs: "0~4",
-                  pgp: "",
-                  pgb: "",
-                  pgs: "",
-                  ppb: "",
-                  pps: "",
-                  pbs: ""
-                },
-                {
-                  group: "音乐",
-                  hgp: "",
-                  hgb: "0~18",
-                  hgs: "",
-                  hpb: "",
-                  hps: "",
-                  hbs: "0~4",
-                  pgp: "",
-                  pgb: "",
-                  pgs: "",
-                  ppb: "",
-                  pps: "",
-                  pbs: ""
-                },
-                {
-                  group: "音乐",
-                  hgp: "",
-                  hgb: "0~18",
-                  hgs: "",
-                  hpb: "",
-                  hps: "",
-                  hbs: "0~4",
-                  pgp: "",
-                  pgb: "",
-                  pgs: "",
-                  ppb: "",
-                  pps: "",
-                  pbs: ""
-                },
-                {
-                  group: "班会",
-                  hgp: "",
-                  hgb: "0~18",
-                  hgs: "",
-                  hpb: "",
-                  hps: "",
-                  hbs: "0~4",
-                  pgp: "",
-                  pgb: "",
-                  pgs: "",
-                  ppb: "",
-                  pps: "",
-                  pbs: ""
-                },
-                {
-                  group: "班会",
-                  hgp: "",
-                  hgb: "0~18",
-                  hgs: "",
-                  hpb: "",
-                  hps: "",
-                  hbs: "0~4",
-                  pgp: "",
-                  pgb: "",
-                  pgs: "",
-                  ppb: "",
-                  pps: "",
-                  pbs: ""
-                }
-              ]
-            },
-            {
-              title: "教学班二",
-              name: "3",
-              Group: [
-                {
-                  group: "历史",
-                  hgp: "0~12",
-                  hgb: "0~18",
-                  hgs: "",
-                  hpb: "",
-                  hps: "0~6",
-                  hbs: "0~4",
-                  pgp: "",
-                  pgb: "",
-                  pgs: "",
-                  ppb: "",
-                  pps: "",
-                  pbs: ""
-                },
-                {
-                  group: "物理",
-                  hgp: "",
-                  hgb: "",
-                  hgs: "",
-                  hpb: "",
-                  hps: "",
-                  hbs: "",
-                  pgp: "",
-                  pgb: "0~5",
-                  pgs: "",
-                  ppb: "",
-                  pps: "0~17",
-                  pbs: ""
-                },
-                {
-                  group: "地理",
-                  hgp: "0~12",
-                  hgb: "0~18",
-                  hgs: "",
-                  hpb: "",
-                  hps: "",
-                  hbs: "",
-                  pgp: "0~5",
-                  pgb: "",
-                  pgs: "",
-                  ppb: "",
-                  pps: "",
-                  pbs: ""
-                },
-                {
-                  group: "政治",
-                  hgp: "0~12",
-                  hgb: "",
-                  hgs: "",
-                  hpb: "",
-                  hps: "0~6",
-                  hbs: "",
-                  pgp: "",
-                  pgb: "",
-                  pgs: "",
-                  ppb: "",
-                  pps: "",
-                  pbs: ""
-                },
-                {
-                  group: "生物",
-                  hgp: "",
-                  hgb: "0~18",
-                  hgs: "",
-                  hpb: "",
-                  hps: "",
-                  hbs: "0~4",
-                  pgp: "",
-                  pgb: "",
-                  pgs: "",
-                  ppb: "",
-                  pps: "",
-                  pbs: ""
-                },
-                {
-                  group: "化学",
-                  hgp: "",
-                  hgb: "0~18",
-                  hgs: "",
-                  hpb: "",
-                  hps: "",
-                  hbs: "0~4",
-                  pgp: "",
-                  pgb: "",
-                  pgs: "",
-                  ppb: "",
-                  pps: "",
-                  pbs: ""
-                },
-                {
-                  group: "语文",
-                  hgp: "",
-                  hgb: "0~18",
-                  hgs: "",
-                  hpb: "",
-                  hps: "",
-                  hbs: "0~4",
-                  pgp: "",
-                  pgb: "",
-                  pgs: "",
-                  ppb: "",
-                  pps: "",
-                  pbs: ""
-                },
-                {
-                  group: "语文",
-                  hgp: "",
-                  hgb: "0~18",
-                  hgs: "",
-                  hpb: "",
-                  hps: "",
-                  hbs: "0~4",
-                  pgp: "",
-                  pgb: "",
-                  pgs: "",
-                  ppb: "",
-                  pps: "",
-                  pbs: ""
-                },
-                {
-                  group: "数学",
-                  hgp: "",
-                  hgb: "0~18",
-                  hgs: "",
-                  hpb: "",
-                  hps: "",
-                  hbs: "0~4",
-                  pgp: "",
-                  pgb: "",
-                  pgs: "",
-                  ppb: "",
-                  pps: "",
-                  pbs: ""
-                },
-                {
-                  group: "数学",
-                  hgp: "",
-                  hgb: "0~18",
-                  hgs: "",
-                  hpb: "",
-                  hps: "",
-                  hbs: "0~4",
-                  pgp: "",
-                  pgb: "",
-                  pgs: "",
-                  ppb: "",
-                  pps: "",
-                  pbs: ""
-                },
-                {
-                  group: "英语",
-                  hgp: "",
-                  hgb: "0~18",
-                  hgs: "",
-                  hpb: "",
-                  hps: "",
-                  hbs: "0~4",
-                  pgp: "",
-                  pgb: "",
-                  pgs: "",
-                  ppb: "",
-                  pps: "",
-                  pbs: ""
-                },
-                {
-                  group: "英语",
-                  hgp: "",
-                  hgb: "0~18",
-                  hgs: "",
-                  hpb: "",
-                  hps: "",
-                  hbs: "0~4",
-                  pgp: "",
-                  pgb: "",
-                  pgs: "",
-                  ppb: "",
-                  pps: "",
-                  pbs: ""
-                },
-                {
-                  group: "体育",
-                  hgp: "",
-                  hgb: "0~18",
-                  hgs: "",
-                  hpb: "",
-                  hps: "",
-                  hbs: "0~4",
-                  pgp: "",
-                  pgb: "",
-                  pgs: "",
-                  ppb: "",
-                  pps: "",
-                  pbs: ""
-                },
-                {
-                  group: "体育",
-                  hgp: "",
-                  hgb: "0~18",
-                  hgs: "",
-                  hpb: "",
-                  hps: "",
-                  hbs: "0~4",
-                  pgp: "",
-                  pgb: "",
-                  pgs: "",
-                  ppb: "",
-                  pps: "",
-                  pbs: ""
-                },
-                {
-                  group: "信息与技术",
-                  hgp: "",
-                  hgb: "0~18",
-                  hgs: "",
-                  hpb: "",
-                  hps: "",
-                  hbs: "0~4",
-                  pgp: "",
-                  pgb: "",
-                  pgs: "",
-                  ppb: "",
-                  pps: "",
-                  pbs: ""
-                },
-                {
-                  group: "信息与技术",
-                  hgp: "",
-                  hgb: "0~18",
-                  hgs: "",
-                  hpb: "",
-                  hps: "",
-                  hbs: "0~4",
-                  pgp: "",
-                  pgb: "",
-                  pgs: "",
-                  ppb: "",
-                  pps: "",
-                  pbs: ""
-                },
-                {
-                  group: "音乐",
-                  hgp: "",
-                  hgb: "0~18",
-                  hgs: "",
-                  hpb: "",
-                  hps: "",
-                  hbs: "0~4",
-                  pgp: "",
-                  pgb: "",
-                  pgs: "",
-                  ppb: "",
-                  pps: "",
-                  pbs: ""
-                },
-                {
-                  group: "音乐",
-                  hgp: "",
-                  hgb: "0~18",
-                  hgs: "",
-                  hpb: "",
-                  hps: "",
-                  hbs: "0~4",
-                  pgp: "",
-                  pgb: "",
-                  pgs: "",
-                  ppb: "",
-                  pps: "",
-                  pbs: ""
-                },
-                {
-                  group: "班会",
-                  hgp: "",
-                  hgb: "0~18",
-                  hgs: "",
-                  hpb: "",
-                  hps: "",
-                  hbs: "0~4",
-                  pgp: "",
-                  pgb: "",
-                  pgs: "",
-                  ppb: "",
-                  pps: "",
-                  pbs: ""
-                },
-                {
-                  group: "班会",
-                  hgp: "",
-                  hgb: "0~18",
-                  hgs: "",
-                  hpb: "",
-                  hps: "",
-                  hbs: "0~4",
-                  pgp: "",
-                  pgb: "",
-                  pgs: "",
-                  ppb: "",
-                  pps: "",
-                  pbs: ""
-                }
-              ]
-            }
+          teachClassData: [
           ]
-        }
-      ]
+   
     };
   },
   watch: {},
@@ -951,8 +248,10 @@ export default {
   methods: {
     //是否展示加减号
     showTableLastItem(isShow) {
-      let tbody = document.getElementsByTagName("tbody");
-      this.$nextTick(() => {
+      let that =this;
+      // let tbody = document.getElementsByTagName("tbody");
+       if (that.isShowFourStageData == true) {
+      that.$nextTick(() => {
         if (isShow == "noShow") {
           //全都不显示加减
           let itemIcon = document.getElementsByClassName("icon");
@@ -960,33 +259,36 @@ export default {
             itemIcon[k].setAttribute("style", "visibility:hidden");
           }
         } else {
-          //最后一行不显示加减
-          for (let j = 0; j < tbody.length; j++) {
-            let tr = tbody[j].getElementsByClassName("el-table__row")[5];
-            let td = tr.getElementsByTagName("td");
-            for (let i = 1; i < 13; i++) {
-              td[i]
-                .getElementsByTagName("i")[0]
-                .setAttribute("style", "display:none");
-              td[i]
-                .getElementsByTagName("i")[1]
-                .setAttribute("style", "display:none");
-            }
-          }
+          // 最后一行不显示加减
+          // for (let j = 0; j < tbody.length; j++) {
+          //   let tr = tbody[j].getElementsByClassName("el-table__row")[5];
+          //   let td = tr.getElementsByTagName("td");
+          //   for (let i = 1; i < 13; i++) {
+          //     td[i]
+          //       .getElementsByTagName("i")[0]
+          //       .setAttribute("style", "display:none");
+          //     td[i]
+          //       .getElementsByTagName("i")[1]
+          //       .setAttribute("style", "display:none");
+          //   }
+          // }
         }
+      
       });
+       }
     },
     //确认/修改
     getModify() {
+      let that =this;
       let itemIcon = document.getElementsByClassName("icon");
-      if (this.isModify == "修改") {
-        this.isModify = "确定";
+      if (that.isModify == "修改") {
+        that.isModify = "确定";
         for (let k = 0; k < itemIcon.length; k++) {
           itemIcon[k].setAttribute("style", "visibility:normal");
         }
-        this.showTableLastItem("show");
+        that.showTableLastItem("show");
       } else {
-        this.isModify = "修改";
+        that.isModify = "修改";
         for (let k = 0; k < itemIcon.length; k++) {
           itemIcon[k].setAttribute("style", "visibility:hidden");
         }
@@ -1001,26 +303,236 @@ export default {
     addData(row) {
       console.log(row);
     },
-    //跳转到第四个阶段
+    //跳转到行政班
     toRuleFourthStage() {
-      // let that = this;
-      // if (that.isModify == "修改") {
-      //   that.$router.push({
-      //     path: "@/components/rulesStage/RuleFourthStage", //跳转路径
-      //     name: "ruleFourthStage", //跳转路径的name值，不写跳转后页面取不到参数
-      //     // 参数
-      //     query: {
-      //       // form: that.form
-      //     }
-      //   });
-      // } else {
-      //   alert("请先点击折叠面板确认按钮！");
-      // }
+      let that = this;
+      if (that.isModify == "修改") {
+        that.$router.push({
+          path: "/taskLists", //跳转路径
+          name: "taskLists", //跳转路径的name值，不写跳转后页面取不到参数
+          // 参数
+          query: {
+            taskId: that.taskId
+          }
+        });
+      } else {
+        alert("请先点击折叠面板确认按钮！");
+      }
+    },
+    //运行第四阶段
+    getThourResultStage(taskId){
+      let that = this;
+      that
+        .$axios({
+          url:
+            that.$root.URL+"/runtask?taskId=" + //运行任务
+            taskId +
+            "&stage=4",
+          method: "post",
+          crossDomain: true
+        })
+        .then(function(res) {
+          if (res.status === 200) {
+            // if (that.runingTime <= 5 && that.runingTime >= 0) {
+
+            that.timer = setInterval(() => {
+              that
+                .$axios({
+                  url:
+                    that.$root.URL+"/result?taskId=" + //运行任务
+                    taskId +
+                    "&stage=4&distribution=0",
+                  method: "get",
+                  crossDomain: true
+                })
+                .then(function(res) {
+                  if (res.status === 200) {
+                    if (res.data != "") {
+                      
+                      clearInterval(that.timer);
+                      that.status = "已完成";
+                      that.showLoading = false;
+                      that.isShowFourStageData = true;
+                      that.teachClassData = res.data.fourStageScoreData;
+                      that.showTableLastItem("noShow"); 
+                     
+                    }
+                  }
+                })
+                .catch(function(error) {
+                  clearInterval(that.timer);
+                  if (error.response) {
+                    if (error.response.status === 404) {
+                      that.$router.push({
+                        path: "@/views/loginFailed", //跳转路径
+                        name: "loginFailed", //跳转路径的name值，不写跳转后页面取不到参数
+                        // 参数
+                        query: {
+                          error: "correct"
+                        }
+                      });
+                    }
+                  } else if (error.request) {
+                    that.$router.push({
+                      path: "@/views/loginFailed", //跳转路径
+                      name: "loginFailed", //跳转路径的name值，不写跳转后页面取不到参数
+                      // 参数
+                      query: {
+                        error: "error"
+                      }
+                    });
+                    console.log(error.request);
+                  }else {
+                    that.$router.push({
+                      path: "@/views/loginFailed", //跳转路径
+                      name: "loginFailed", //跳转路径的name值，不写跳转后页面取不到参数
+                      // 参数
+                      query: {
+                        error: "error"
+                      }
+                    });
+                    console.log("Error", error.message);
+                  }
+                  console.log(error.request);
+                });
+            }, 1000);
+          }
+        })
+        .catch(function(error) {
+          console.log(error);
+        });
+    },
+    //判断当前任务是否存在
+    isThourResultStage(taskId){
+      let that = this;
+      that
+        .$axios({
+          url: this.$root.URL + "/taskstatus?taskId=" + taskId,
+          method: "get",
+          crossDomain: true
+        })
+        .then(function(res) {
+          if (res.status === 200) {
+            for (let i in res.data.tasksStageMap) {
+              if (i == taskId) {
+                if (res.data.tasksStageMap[i] < 4) {
+                  that.getThourResultStage(taskId);
+                } else {
+                  that.status = "已完成";
+                      that.showLoading = false;
+                      that.isShowFourStageData = true;
+                  that
+                    .$axios({
+                      url:
+                        that.$root.URL +
+                        "/result?taskId=" + 
+                        taskId +
+                        "&stage=4&distribution=0",
+                      method: "get",
+                      crossDomain: true
+                    })
+                    .then(function(res) {
+                      console.log(res.data);
+                      if (res.status === 200) {
+                        if (res.data != "") {
+                     that.teachClassData = res.data.fourStageScoreData;
+                     that.showTableLastItem("noShow"); 
+                        }
+                      }
+                    })
+                    .catch(function(error) {
+                      if (error.response) {
+                        if (error.response.status === 404) {
+                          that.$router.push({
+                            path: "@/views/loginFailed", //跳转路径
+                            name: "loginFailed", //跳转路径的name值，不写跳转后页面取不到参数
+                            // 参数
+                            query: {
+                              error: "correct"
+                            }
+                          });
+                        }
+                      } else if (error.request) {
+                        that.$router.push({
+                          path: "@/views/loginFailed", //跳转路径
+                          name: "loginFailed", //跳转路径的name值，不写跳转后页面取不到参数
+                          // 参数
+                          query: {
+                            error: "error"
+                          }
+                        });
+                        console.log(error.request);
+                      } else {
+                        that.$router.push({
+                          path: "@/views/loginFailed", //跳转路径
+                          name: "loginFailed", //跳转路径的name值，不写跳转后页面取不到参数
+                          // 参数
+                          query: {
+                            error: "error"
+                          }
+                        });
+                        console.log("Error", error.message);
+                      }
+                      console.log(error.request);
+                    });
+                }
+              }
+            }
+          }
+        })
+        .catch(function(error) {
+          if (error.response) {
+            if (error.response.status === 404) {
+              that.$router.push({
+                path: "@/views/loginFailed", //跳转路径
+                name: "loginFailed", //跳转路径的name值，不写跳转后页面取不到参数
+                // 参数
+                query: {
+                  error: "correct"
+                }
+              });
+            }
+          } else if (error.request) {
+            that.$router.push({
+              path: "@/views/loginFailed", //跳转路径
+              name: "loginFailed", //跳转路径的name值，不写跳转后页面取不到参数
+              // 参数
+              query: {
+                error: "error"
+              }
+            });
+            console.log(error.request);
+          } else {
+            that.$router.push({
+              path: "@/views/loginFailed", //跳转路径
+              name: "loginFailed", //跳转路径的name值，不写跳转后页面取不到参数
+              // 参数
+              query: {
+                error: "error"
+              }
+            });
+            console.log("Error", error.message);
+          }
+          console.log(error.request);
+        });
     }
   },
   created() {},
   mounted() {
-    this.showTableLastItem("noShow");
+    let that = this;
+    // this.showTableLastItem("noShow");
+
+    let params = that.$route.query;
+    that.taskId = params.taskId;
+    
+
+     that.isNameExit = params.isNameExit;
+ 
+    if (that.isNameExit == false) {
+      that.getThourResultStage(that.taskId);
+    } else {
+      that.isThourResultStage(that.taskId);
+    }
   }
 };
 </script>
@@ -1058,7 +570,7 @@ export default {
   margin-right: 50px;
 }
 .group {
-  width: 1043px;
+  width: 1063px;
   display: block;
   margin: 10px 0 30px 0;
   border: 1px solid #c9e3fe;
@@ -1069,7 +581,7 @@ export default {
   font-size: 12px;
   position: fixed;
   right: 35px;
-  bottom: 150px;
+  bottom: 100px;
   border-radius: 50%;
   cursor: pointer;
   background-color: #f2f5f6;
@@ -1105,7 +617,7 @@ export default {
 }
 .next-btn {
   display: inline-block;
-  margin: 40px 500px;
+  margin: 100px 500px;
 }
 .four-score-table {
   width: 803px;
@@ -1122,21 +634,56 @@ export default {
   line-height: 40px;
   color: #1989fa;
 }
-.show-data {
-  width: 60px;
-  height: 30px;
-  background-color: #f2f5f6;
-  box-shadow: 0 0 6px rgba(0, 0, 0, 0.12);
+/**加载动画**/
+.spinner {
+  margin: 100px auto 0;
+  margin-top: 200px;
+  width: 500px;
   text-align: center;
-  color: #1989fa;
-  font-size: 12px;
-  position: fixed;
-  right: 30px;
-  bottom: 104px;
 }
-.show-data span {
-  position: absolute;
-  bottom: 8px;
-  right: 5px;
+.spinner > div {
+  width: 30px;
+  height: 30px;
+  background-color: #409eff;
+  border-radius: 100%;
+  display: inline-block;
+  -webkit-animation: bouncedelay 1.4s infinite ease-in-out;
+  animation: bouncedelay 1.4s infinite ease-in-out;
+  /* Prevent first frame from flickering when animation starts */
+
+  -webkit-animation-fill-mode: both;
+  animation-fill-mode: both;
+}
+.spinner .bounce1 {
+  -webkit-animation-delay: -0.32s;
+  animation-delay: -0.32s;
+  margin-right: 80px;
+}
+.spinner .bounce2 {
+  -webkit-animation-delay: -0.16s;
+  animation-delay: -0.16s;
+  margin-right: 80px;
+}
+@-webkit-keyframes bouncedelay {
+  0%,
+  80%,
+  100% {
+    -webkit-transform: scale(0);
+  }
+  40% {
+    -webkit-transform: scale(1);
+  }
+}
+@keyframes bouncedelay {
+  0%,
+  80%,
+  100% {
+    transform: scale(0);
+    -webkit-transform: scale(0);
+  }
+  40% {
+    transform: scale(1);
+    -webkit-transform: scale(1);
+  }
 }
 </style>

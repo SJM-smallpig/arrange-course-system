@@ -17,8 +17,8 @@ Vue.prototype.localData = localData;
 Vue.prototype.sessionData=sessionData;
 // axios.defaults.baseURL = '/api'
 Vue.prototype.$axios = axios;
-// axios.defaults.headers.post["Content-type"] = "application/json"
-
+axios.defaults.headers.post["Content-type"] = "application/json;charset=utf-8"
+axios.defaults.headers.withCredentials = true
 
 //判断是进入登录页面还是主页面
 // router.beforeEach((to, from, next) => {
@@ -46,6 +46,11 @@ new Vue({
   el: '#app',
   router,
   store,
+  data() {
+    return {
+      URL:'http://lede.dalaomai.cn:5050/goclass/class/grouping'
+    }
+  },
   components: { App },
   template: '<App/>',
   render: h => h(App)
